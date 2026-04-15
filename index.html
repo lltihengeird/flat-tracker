@@ -206,19 +206,6 @@
       outline: none;
       cursor: pointer;
     }
-    #btn-show-hidden {
-      border: 1px solid #d1d5db;
-      border-radius: 6px;
-      padding: 5px 12px;
-      font-size: .82rem;
-      background: #fff;
-      color: #555;
-      cursor: pointer;
-      transition: background .15s, color .15s, border-color .15s;
-      white-space: nowrap;
-    }
-    #btn-show-hidden:hover { border-color: #0f3460; color: #0f3460; }
-    #btn-show-hidden.active { background: #0f3460; color: #fff; border-color: #0f3460; }
     .count-badge {
       margin-left: auto;
       background: #f0f2f5;
@@ -226,6 +213,48 @@
       padding: 4px 14px;
       font-size: .8rem;
       color: #555;
+    }
+
+    /* ---- TAB BAR ---- */
+    .tab-bar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 32px;
+      background: #fff;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .tab-btn {
+      position: relative;
+      border: 1px solid #d1d5db;
+      border-radius: 20px;
+      padding: 6px 20px;
+      font-size: .84rem;
+      background: #f5f5f5;
+      color: #555;
+      cursor: pointer;
+      transition: background .15s, color .15s, border-color .15s;
+      white-space: nowrap;
+      font-weight: 500;
+    }
+    .tab-btn:hover { border-color: #0f3460; color: #0f3460; background: #f0f4ff; }
+    .tab-btn.active { background: #1a1a2e; color: #fff; border-color: #1a1a2e; }
+    .tab-btn.active:hover { background: #1a1a2e; color: #fff; }
+    .tab-new-badge {
+      position: absolute;
+      top: -7px; right: -7px;
+      min-width: 18px; height: 18px;
+      background: #e94560;
+      color: #fff;
+      border-radius: 9px;
+      font-size: .68rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 5px;
+      pointer-events: none;
+      line-height: 1;
     }
 
     main { padding: 24px 32px; }
@@ -469,37 +498,6 @@
     }
     .view-btn.active { background: #fff; color: #0f3460; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
 
-    /* ---- NEW button ---- */
-    #btn-new {
-      position: relative;
-      border: 1px solid #d1d5db;
-      border-radius: 6px;
-      padding: 5px 12px;
-      font-size: .82rem;
-      background: #fff;
-      color: #555;
-      cursor: pointer;
-      transition: background .15s, color .15s, border-color .15s;
-      white-space: nowrap;
-    }
-    #btn-new:hover { border-color: #0f3460; color: #0f3460; }
-    #btn-new.active { background: #0f3460; color: #fff; border-color: #0f3460; }
-    #new-badge {
-      position: absolute;
-      top: -7px; right: -7px;
-      min-width: 18px; height: 18px;
-      background: #e94560;
-      color: #fff;
-      border-radius: 9px;
-      font-size: .68rem;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0 5px;
-      pointer-events: none;
-      line-height: 1;
-    }
     .new-card-badge {
       position: absolute;
       top: 8px; left: 8px;
@@ -574,6 +572,13 @@
 
 </div>
 
+<!-- ===== TAB BAR ===== -->
+<div class="tab-bar">
+  <button class="tab-btn active" id="tab-all">Все</button>
+  <button class="tab-btn" id="tab-new">⭐ New ⭐<span class="tab-new-badge" id="new-badge" style="display:none">0</span></button>
+  <button class="tab-btn" id="tab-hidden">Скрытые</button>
+</div>
+
 <!-- ===== TOOLBAR ===== -->
 <div class="toolbar">
   <label>Сортировка:</label>
@@ -585,10 +590,6 @@
     <option value="kremlin-asc">Ближе к Кремлю</option>
     <option value="boost" style="color:#dc2626;font-weight:700">🔴 BOOST button</option>
   </select>
-
-  <button id="btn-new">⭐ New ⭐<span id="new-badge" style="display:none">0</span></button>
-
-  <button id="btn-show-hidden">Скрытые: <span id="hidden-count">0</span></button>
 
   <span class="count-badge"><span id="visible-count">0</span> объявлений</span>
 
@@ -622,10 +623,9 @@
 // =====================================================================
 let allOffers  = [];
 let viewMode   = 'cards';
-let showHidden = false;
-let showNewOnly     = false;
+let activeTab  = 'all'; // 'all' | 'new' | 'hidden'
 let newIds          = new Set(); // ids not in seen_ids at page load; cleared on btn click
-let newIdsForFilter = new Set(); // snapshot used for filtering; set on btn click
+let newIdsForFilter = new Set(); // snapshot used for filtering; set on tab-new click
 
 const HIDDEN_KEY  = 'flat_tracker_hidden';
 const SEEN_KEY    = 'flat_tracker_seen_ids';
@@ -645,6 +645,7 @@ function computeNewIds() {
   badge.textContent = newIds.size;
   badge.style.display = newIds.size > 0 ? 'flex' : 'none';
 }
+function updateHiddenCount() { /* count now implicit in hidden tab */ }
 function markAllSeen() {
   const seen = getSeenIds();
   allOffers.forEach(o => seen.add(String(o.id)));
@@ -1030,7 +1031,7 @@ function applyFilters() {
   const dishRe     = /посудомо[её]чн|посудомойк/i;
 
   let filtered;
-  if (showHidden) {
+  if (activeTab === 'hidden') {
     filtered = allOffers.filter(o => hidden.has(String(o.id)));
   } else {
     filtered = allOffers.filter(o => {
@@ -1043,7 +1044,7 @@ function applyFilters() {
       if (dishwasher && !dishRe.test((o.description || '') + ' ' + (o.title || ''))) return false;
       return true;
     });
-    if (showNewOnly) {
+    if (activeTab === 'new') {
       filtered = filtered.filter(o => newIdsForFilter.has(String(o.id)));
     }
   }
@@ -1088,12 +1089,32 @@ document.querySelector('main').addEventListener('click', e => {
 });
 
 // =====================================================================
-// Show-hidden toggle
+// Tab bar
 // =====================================================================
-document.getElementById('btn-show-hidden').addEventListener('click', () => {
-  showHidden = !showHidden;
-  document.getElementById('btn-show-hidden').classList.toggle('active', showHidden);
+function setActiveTab(tab) {
+  activeTab = tab;
+  document.getElementById('tab-all').classList.toggle('active', tab === 'all');
+  document.getElementById('tab-new').classList.toggle('active', tab === 'new');
+  document.getElementById('tab-hidden').classList.toggle('active', tab === 'hidden');
   applyFilters();
+}
+
+document.getElementById('tab-all').addEventListener('click', () => {
+  setActiveTab('all');
+});
+
+document.getElementById('tab-new').addEventListener('click', () => {
+  if (activeTab !== 'new') {
+    newIdsForFilter = new Set(newIds);
+    markAllSeen();
+    newIds = new Set();
+    document.getElementById('new-badge').style.display = 'none';
+  }
+  setActiveTab('new');
+});
+
+document.getElementById('tab-hidden').addEventListener('click', () => {
+  setActiveTab('hidden');
 });
 
 // =====================================================================
@@ -1123,22 +1144,6 @@ document.getElementById('dishwasher-filter').addEventListener('change', () => { 
 document.getElementById('sort-select').addEventListener('change', function() {
   this.classList.toggle('boost-active', this.value === 'boost');
   applyFilters(); saveFilters();
-});
-
-// =====================================================================
-// New offers toggle
-// =====================================================================
-document.getElementById('btn-new').addEventListener('click', () => {
-  showNewOnly = !showNewOnly;
-  if (showNewOnly) {
-    // Snapshot ids for filtering, mark all seen, clear visual badges
-    newIdsForFilter = new Set(newIds);
-    markAllSeen();
-    newIds = new Set();
-    document.getElementById('new-badge').style.display = 'none';
-  }
-  document.getElementById('btn-new').classList.toggle('active', showNewOnly);
-  applyFilters();
 });
 
 // Filters dropdown toggle

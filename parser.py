@@ -17,6 +17,7 @@ log = logging.getLogger(__name__)
 
 API_URL = "https://api.cian.ru/search-offers/v2/search-offers-desktop/"
 OUTPUT_FILE = Path("data.json")
+COOKIES_FILE = Path(__file__).parent / "cookies.json"
 
 HEADERS = {
     "User-Agent": (
@@ -78,8 +79,12 @@ def parse_offer(offer: dict) -> dict:
         metro           = ug.get("name")
         metro_time      = ug.get("travelTime")       # минуты
         metro_transport = ug.get("transportType")    # "walk" | "transport"
+        walk_time       = metro_time if metro_transport == "walk" else None
     else:
-        metro = metro_time = metro_transport = None
+        metro = metro_time = metro_transport = walk_time = None
+
+    # Commission from bargainTerms (agentFee or clientFee, in percent)
+    commission = bargain.get("agentFee") or bargain.get("clientFee") or 0
 
     # Photo
     photos = offer.get("photos", [])
@@ -103,6 +108,8 @@ def parse_offer(offer: dict) -> dict:
         "metro": metro,
         "metro_time": metro_time,
         "metro_transport": metro_transport,
+        "walk_time": walk_time,
+        "commission": commission,
         "photo": photo_url,
         "area": total_area,
         "floor": floor,
@@ -114,9 +121,39 @@ def parse_offer(offer: dict) -> dict:
     }
 
 
+def load_cookies(session: requests.Session) -> None:
+    """Load cookies from cookies.json and inject them into the session."""
+    if not COOKIES_FILE.exists():
+        log.warning("cookies.json not found at %s — skipping", COOKIES_FILE)
+        return
+    try:
+        cookies = json.loads(COOKIES_FILE.read_text(encoding="utf-8"))
+        if not isinstance(cookies, list):
+            log.warning("cookies.json must contain a JSON array — skipping")
+            return
+        for c in cookies:
+            name = c.get("name")
+            value = c.get("value")
+            if name and value is not None:
+                session.cookies.set(name, str(value), domain=c.get("domain", ".cian.ru"))
+        log.info("Loaded %d cookies from %s", len(session.cookies), COOKIES_FILE)
+    except (json.JSONDecodeError, OSError) as e:
+        log.warning("Could not read cookies.json: %s — skipping", e)
+
+
 def scrape(max_pages: int = 5) -> list:
     session = requests.Session()
     session.headers.update(HEADERS)
+    load_cookies(session)
+
+    # Warm up the session: fetch the main page to obtain cookies Cian requires
+    try:
+        log.info("Warming up session (fetching main page for cookies) …")
+        warm = session.get("https://www.cian.ru/", timeout=20)
+        warm.raise_for_status()
+        log.info("  → cookies obtained: %s", list(session.cookies.keys()))
+    except requests.RequestException as e:
+        log.warning("Could not warm up session: %s — proceeding anyway", e)
 
     all_offers = []
 
@@ -142,25 +179,68 @@ def scrape(max_pages: int = 5) -> list:
             delay = random.uniform(1.5, 3.0)
             time.sleep(delay)
 
-    return all_offers
+    # Deduplicate by id, keeping first occurrence
+    seen = set()
+    unique_offers = []
+    for o in all_offers:
+        if o["id"] not in seen:
+            seen.add(o["id"])
+            unique_offers.append(o)
+    removed = len(all_offers) - len(unique_offers)
+    if removed:
+        log.info("Removed %d duplicates, %d unique offers remain", removed, len(unique_offers))
+    return unique_offers
+
+
+def load_existing(path: Path) -> dict:
+    """Load existing data.json, return dict with 'offers' list (or empty)."""
+    if not path.exists():
+        return {}
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+        if isinstance(data, dict) and "offers" in data:
+            return data
+    except (json.JSONDecodeError, OSError) as e:
+        log.warning("Could not read existing %s: %s — starting fresh", path, e)
+    return {}
+
+
+def merge_offers(existing: list, fresh: list) -> tuple[list, int]:
+    """Merge fresh offers into existing, keyed by id. Returns (merged list, new count)."""
+    index = {o["id"]: o for o in existing}
+    new_count = 0
+    for o in fresh:
+        if o["id"] not in index:
+            index[o["id"]] = o
+            new_count += 1
+    return list(index.values()), new_count
 
 
 def main():
     log.info("Starting Cian parser — 1-2-3-room rentals in Moscow, no price limit")
-    offers = scrape(max_pages=10)
+    fresh = scrape(max_pages=20)
 
-    if not offers:
+    if not fresh:
         log.error("No offers collected. Cian may have blocked the request or changed the API.")
         return
 
+    existing_data = load_existing(OUTPUT_FILE)
+    existing_offers = existing_data.get("offers", [])
+    merged, new_count = merge_offers(existing_offers, fresh)
+
+    log.info(
+        "Merge: %d existing + %d fresh → %d new added, %d total unique",
+        len(existing_offers), len(fresh), new_count, len(merged),
+    )
+
     output = {
         "fetched_at": datetime.now().isoformat(timespec="seconds"),
-        "total": len(offers),
-        "offers": offers,
+        "total": len(merged),
+        "offers": merged,
     }
 
     OUTPUT_FILE.write_text(json.dumps(output, ensure_ascii=False, indent=2), encoding="utf-8")
-    log.info("Saved %d offers to %s", len(offers), OUTPUT_FILE)
+    log.info("Saved %d offers to %s", len(merged), OUTPUT_FILE)
 
 
 if __name__ == "__main__":

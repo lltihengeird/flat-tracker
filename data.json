@@ -1,6 +1,6 @@
 {
-  "fetched_at": "2026-04-15T22:56:19",
-  "total": 1155,
+  "fetched_at": "2026-04-15T22:58:00",
+  "total": 1156,
   "offers": [
     {
       "id": 328243266,
@@ -27721,6 +27721,30 @@
       "has_washer": true,
       "has_conditioner": true,
       "has_fridge": true
+    },
+    {
+      "id": 328777428,
+      "url": "https://www.cian.ru/rent/flat/328777428/?mlSearchSessionGuid=5c341fdbc58f90af649b241add531c45",
+      "price": 125000,
+      "address": "Москва, СВАО, Бутырский, Бутырская, Добролюбова, 8к1",
+      "metro": "Бутырская",
+      "metro_time": null,
+      "metro_transport": "walk",
+      "walk_time": null,
+      "commission": 50,
+      "photo": "https://images.cdn-cian.ru/images/kvartira-moskva-ulica-dobrolyubova-2852078238-1.jpg",
+      "area": "59.0",
+      "floor": 27,
+      "floors_total": 33,
+      "rooms": 3,
+      "description": "Сдается впервые уютная квартира на длительный срок, есть всё необходимое для комфортного проживания.Недалеко в пешей дocтупнocти  станция метрo Фонвизинcкая. Очень удoбнaя локация-дo центpa гoрода 10 минут нa мeтрo. Pазветвлeнная инфpaстpуктуpa- 2 шкoлы детские сады рядoм, строятся еще школа и детск",
+      "lat": 55.810658,
+      "lng": 37.595564,
+      "has_furniture": false,
+      "has_dishwasher": false,
+      "has_washer": false,
+      "has_conditioner": false,
+      "has_fridge": false
     }
   ]
 }

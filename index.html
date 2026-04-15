@@ -241,7 +241,6 @@
       object-fit: cover;
       transition: transform .4s;
     }
-    .card:hover .card-img-wrap img { transform: scale(1.04); }
 
     .no-photo {
       position: absolute;
@@ -256,18 +255,20 @@
     }
     .no-photo svg { width: 40px; height: 40px; opacity: .4; }
 
-    .card-price-tag {
+    .card-img-link {
+      display: block;
       position: absolute;
-      bottom: 10px;
-      left: 10px;
-      background: rgba(15,52,96,.88);
-      color: #fff;
-      border-radius: 8px;
-      padding: 4px 10px;
-      font-size: .9rem;
-      font-weight: 700;
-      backdrop-filter: blur(4px);
+      inset: 0;
+      z-index: 1;
+      cursor: pointer;
     }
+    .card-img-link img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform .4s;
+    }
+    .card:hover .card-img-link img { transform: scale(1.04); }
+    #sort-select.boost-active { color: #dc2626; font-weight: 700; }
 
     /* dismiss / restore */
     .card-dismiss, .card-restore {
@@ -364,20 +365,12 @@
       padding: 10px 16px 14px;
       border-top: 1px solid #f0f2f5;
     }
-    .card-footer a {
-      display: block;
+    .card-footer-price {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #0f3460;
       text-align: center;
-      background: #0f3460;
-      color: #fff;
-      text-decoration: none;
-      border-radius: 8px;
-      padding: 8px;
-      font-size: .84rem;
-      font-weight: 600;
-      letter-spacing: .3px;
-      transition: background .15s;
     }
-    .card-footer a:hover { background: #e94560; }
 
     /* ---- TABLE ---- */
     #table-wrap { display: none; overflow-x: auto; }
@@ -480,6 +473,8 @@
     <option value="price-desc">Цена ↓</option>
     <option value="area-desc">Площадь ↓</option>
     <option value="area-asc">Площадь ↑</option>
+    <option value="kremlin-asc">Ближе к Кремлю</option>
+    <option value="boost" style="color:#dc2626;font-weight:700">🔴 BOOST button</option>
   </select>
 
   <button id="btn-show-hidden">Скрытые: <span id="hidden-count">0</span></button>
@@ -719,11 +714,14 @@ function renderCards(offers) {
     const geoStrip = (geoLeft || geoRight)
       ? `<div class="card-geo">${geoLeft}${geoRight}</div>` : '';
 
+    const imgContent = o.photo
+      ? `<img src="${o.photo}" alt="фото" loading="lazy" onerror="this.parentNode.innerHTML='${noPhotoSvg().replace(/"/g,"'").replace(/\n/g,'')}'">`
+      : noPhotoSvg();
+
     return `
     <div class="card${isHidden ? ' hidden-offer' : ''}">
       <div class="card-img-wrap">
-        ${o.photo ? `<img src="${o.photo}" alt="фото" loading="lazy" onerror="this.parentNode.innerHTML='${noPhotoSvg().replace(/"/g,"'").replace(/\n/g,'')}'">` : noPhotoSvg()}
-        <span class="card-price-tag">${fmt(o.price)}</span>
+        <a class="card-img-link" href="${o.url}" target="_blank" rel="noopener">${imgContent}</a>
         ${actionBtn}
       </div>
       ${geoStrip}
@@ -737,7 +735,7 @@ function renderCards(offers) {
         ${o.description ? `<p class="card-desc">${o.description}</p>` : ''}
       </div>
       <div class="card-footer">
-        <a href="${o.url}" target="_blank" rel="noopener">Открыть объявление →</a>
+        <div class="card-footer-price">${fmt(o.price)}</div>
       </div>
     </div>`;
   }).join('');
@@ -780,6 +778,103 @@ function renderTable(offers) {
 }
 
 // =====================================================================
+// BOOST score (0–100)
+// =====================================================================
+function calcBoostScore(o) {
+  let score = 0;
+
+  // Цена
+  const price = o.price || 0;
+  if      (price <= 50000)  score += 30;
+  else if (price <= 80000)  score += 25;
+  else if (price <= 120000) score += 18;
+  else if (price <= 200000) score += 10;
+
+  // Расстояние до Кремля
+  if (o.lat != null && o.lng != null) {
+    const km = distKm(o.lat, o.lng);
+    if      (km <= 3)  score += 25;
+    else if (km <= 7)  score += 18;
+    else if (km <= 12) score += 10;
+    else               score += 5;
+  }
+
+  // Метраж
+  const area = o.area || 0;
+  if      (area >= 80) score += 20;
+  else if (area >= 60) score += 15;
+  else if (area >= 40) score += 10;
+  else                 score += 5;
+
+  // Метро (пешком)
+  if (o.metro_transport === 'walk' && o.metro_time != null) {
+    const t = Number(o.metro_time);
+    if      (t <= 5)  score += 15;
+    else if (t <= 10) score += 10;
+    else if (t <= 20) score += 5;
+  }
+
+  // Ремонт
+  const desc = (o.description || '').toLowerCase();
+  if      (desc.includes('дизайнерский'))                       score += 10;
+  else if (desc.includes('евроремонт') || desc.includes('евро')) score += 7;
+  else if (desc.includes('косметический'))                       score += 3;
+
+  return score;
+}
+
+// =====================================================================
+// Filter persistence
+// =====================================================================
+const FILTERS_KEY = 'flat_tracker_filters';
+
+function saveFilters() {
+  const state = {
+    priceMin:   document.getElementById('price-min').value,
+    priceMax:   document.getElementById('price-max').value,
+    areaMin:    document.getElementById('area-min').value,
+    dishwasher: document.getElementById('dishwasher-filter').checked,
+    sort:       document.getElementById('sort-select').value,
+    view:       viewMode,
+  };
+  localStorage.setItem(FILTERS_KEY, JSON.stringify(state));
+}
+
+function loadFilters() {
+  let state;
+  try { state = JSON.parse(localStorage.getItem(FILTERS_KEY) || 'null'); } catch { return; }
+  if (!state) return;
+
+  const priceMinEl = document.getElementById('price-min');
+  const priceMaxEl = document.getElementById('price-max');
+  const areaMinEl  = document.getElementById('area-min');
+  const sortEl     = document.getElementById('sort-select');
+
+  if (state.priceMin != null) {
+    priceMinEl.value = state.priceMin;
+    document.getElementById('price-min-val').textContent = Number(state.priceMin).toLocaleString('ru-RU') + ' ₽';
+  }
+  if (state.priceMax != null) {
+    priceMaxEl.value = state.priceMax;
+    document.getElementById('price-max-val').textContent = Number(state.priceMax).toLocaleString('ru-RU') + ' ₽';
+  }
+  if (state.areaMin != null) {
+    areaMinEl.value = state.areaMin;
+    document.getElementById('area-min-val').textContent = state.areaMin + ' м²';
+  }
+  if (state.dishwasher != null) document.getElementById('dishwasher-filter').checked = state.dishwasher;
+  if (state.sort) {
+    sortEl.value = state.sort;
+    sortEl.classList.toggle('boost-active', state.sort === 'boost');
+  }
+  if (state.view === 'table') {
+    viewMode = 'table';
+    document.getElementById('btn-table').classList.add('active');
+    document.getElementById('btn-cards').classList.remove('active');
+  }
+}
+
+// =====================================================================
 // Apply filters + sort
 // =====================================================================
 function applyFilters() {
@@ -810,6 +905,12 @@ function applyFilters() {
     if (sortVal === 'price-desc') return (b.price || 0) - (a.price || 0);
     if (sortVal === 'area-desc')  return (b.area  || 0) - (a.area  || 0);
     if (sortVal === 'area-asc')   return (a.area  || 0) - (b.area  || 0);
+    if (sortVal === 'kremlin-asc') {
+      const da = (a.lat != null && a.lng != null) ? distKm(a.lat, a.lng) : Infinity;
+      const db = (b.lat != null && b.lng != null) ? distKm(b.lat, b.lng) : Infinity;
+      return da - db;
+    }
+    if (sortVal === 'boost') return calcBoostScore(b) - calcBoostScore(a);
     return 0;
   });
 
@@ -819,6 +920,7 @@ function applyFilters() {
   document.getElementById('cards').style.display      = (!isEmpty && viewMode === 'cards') ? '' : 'none';
   document.getElementById('table-wrap').style.display = (!isEmpty && viewMode === 'table') ? '' : 'none';
   if (!isEmpty) viewMode === 'cards' ? renderCards(filtered) : renderTable(filtered);
+  saveFilters();
 }
 
 // =====================================================================
@@ -854,12 +956,12 @@ const priceMaxEl = document.getElementById('price-max');
 priceMinEl.addEventListener('input', function () {
   if (Number(this.value) > Number(priceMaxEl.value)) this.value = priceMaxEl.value;
   document.getElementById('price-min-val').textContent = Number(this.value).toLocaleString('ru-RU') + ' ₽';
-  updatePriceTrack(); applyFilters();
+  updatePriceTrack(); applyFilters(); saveFilters();
 });
 priceMaxEl.addEventListener('input', function () {
   if (Number(this.value) < Number(priceMinEl.value)) this.value = priceMinEl.value;
   document.getElementById('price-max-val').textContent = Number(this.value).toLocaleString('ru-RU') + ' ₽';
-  updatePriceTrack(); applyFilters();
+  updatePriceTrack(); applyFilters(); saveFilters();
 });
 
 // =====================================================================
@@ -867,21 +969,24 @@ priceMaxEl.addEventListener('input', function () {
 // =====================================================================
 document.getElementById('area-min').addEventListener('input', function () {
   document.getElementById('area-min-val').textContent = this.value + ' м²';
-  updateAreaTrack(); applyFilters();
+  updateAreaTrack(); applyFilters(); saveFilters();
 });
-document.getElementById('dishwasher-filter').addEventListener('change', applyFilters);
-document.getElementById('sort-select').addEventListener('change', applyFilters);
+document.getElementById('dishwasher-filter').addEventListener('change', () => { applyFilters(); saveFilters(); });
+document.getElementById('sort-select').addEventListener('change', function() {
+  this.classList.toggle('boost-active', this.value === 'boost');
+  applyFilters(); saveFilters();
+});
 document.getElementById('btn-cards').addEventListener('click', () => {
   viewMode = 'cards';
   document.getElementById('btn-cards').classList.add('active');
   document.getElementById('btn-table').classList.remove('active');
-  applyFilters();
+  applyFilters(); saveFilters();
 });
 document.getElementById('btn-table').addEventListener('click', () => {
   viewMode = 'table';
   document.getElementById('btn-table').classList.add('active');
   document.getElementById('btn-cards').classList.remove('active');
-  applyFilters();
+  applyFilters(); saveFilters();
 });
 
 // =====================================================================
@@ -896,7 +1001,7 @@ fetch('data.json')
       document.getElementById('fetched-at').textContent =
         'Обновлено: ' + d.toLocaleString('ru-RU', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' });
     }
-    updateHiddenCount(); updatePriceTrack(); updateAreaTrack(); applyFilters();
+    updateHiddenCount(); updatePriceTrack(); updateAreaTrack(); loadFilters(); applyFilters();
   })
   .catch(() => {
     document.getElementById('empty-msg').style.display = 'block';

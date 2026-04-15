@@ -85,6 +85,11 @@ def parse_offer(offer: dict) -> dict:
     floor = offer.get("floorNumber")
     floors_total = offer.get("building", {}).get("floorsCount")
 
+    # Coordinates
+    coordinates = geo.get("coordinates") or {}
+    lat = coordinates.get("lat")
+    lng = coordinates.get("lng")
+
     return {
         "id": offer.get("id"),
         "url": full_url,
@@ -97,6 +102,8 @@ def parse_offer(offer: dict) -> dict:
         "floors_total": floors_total,
         "rooms": offer.get("roomsCount"),
         "description": (offer.get("description") or "")[:300],
+        "lat": lat,
+        "lng": lng,
     }
 
 

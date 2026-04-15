@@ -75,62 +75,13 @@
 
     .filter-sep { color: #aaa; font-size: .85rem; }
 
-    /* dual range slider track fill */
-    .range-track {
-      position: relative;
-      height: 4px;
-      background: #e5e7eb;
-      border-radius: 4px;
-      width: 130px;
-      align-self: center;
-    }
-    .range-track .track-fill {
-      position: absolute;
-      height: 100%;
-      background: #0f3460;
-      border-radius: 4px;
-      pointer-events: none;
-    }
-    .range-track input[type=range] {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      top: 50%;
-      transform: translateY(-50%);
-      opacity: 0;
-      cursor: pointer;
-      margin: 0;
-      padding: 0;
-    }
-    .range-track input[type=range]::-webkit-slider-thumb { width: 18px; height: 18px; }
-
-    /* visible thumb overlays */
-    .range-thumbs {
-      position: relative;
-      height: 16px;
-      width: 130px;
-      pointer-events: none;
-    }
-    .range-thumbs .thumb {
-      position: absolute;
-      width: 16px;
-      height: 16px;
-      background: #0f3460;
-      border: 2px solid #fff;
-      border-radius: 50%;
-      top: 0;
-      transform: translateX(-50%);
-      box-shadow: 0 1px 4px rgba(0,0,0,.25);
-      pointer-events: none;
-    }
-
     /* simple single range */
     input[type=range].simple-range {
       -webkit-appearance: none;
       appearance: none;
       width: 130px;
       height: 4px;
-      background: linear-gradient(to right, #0f3460 0%, #0f3460 var(--pct, 50%), #e5e7eb var(--pct, 50%), #e5e7eb 100%);
+      background: linear-gradient(to right, #0f3460 0%, #0f3460 var(--pct, 0%), #e5e7eb var(--pct, 0%), #e5e7eb 100%);
       border-radius: 4px;
       outline: none;
       cursor: pointer;
@@ -154,7 +105,6 @@
       border-radius: 50%;
       box-shadow: 0 1px 4px rgba(0,0,0,.25);
       cursor: pointer;
-      border: none;
     }
 
     /* dual range wrapper */
@@ -257,6 +207,20 @@
       cursor: pointer;
     }
 
+    #btn-show-hidden {
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      padding: 5px 12px;
+      font-size: .82rem;
+      background: #fff;
+      color: #555;
+      cursor: pointer;
+      transition: background .15s, color .15s, border-color .15s;
+      white-space: nowrap;
+    }
+    #btn-show-hidden:hover { border-color: #0f3460; color: #0f3460; }
+    #btn-show-hidden.active { background: #0f3460; color: #fff; border-color: #0f3460; }
+
     .count-badge {
       margin-left: auto;
       background: #f0f2f5;
@@ -287,6 +251,11 @@
     .card:hover {
       transform: translateY(-4px);
       box-shadow: 0 8px 24px rgba(0,0,0,.13);
+    }
+    .card.hidden-offer {
+      opacity: .75;
+      outline: 2px dashed #e94560;
+      outline-offset: -2px;
     }
 
     .card-img-wrap {
@@ -332,6 +301,37 @@
       backdrop-filter: blur(4px);
     }
 
+    /* dismiss / restore buttons */
+    .card-dismiss, .card-restore {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 26px;
+      height: 26px;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      backdrop-filter: blur(4px);
+      transition: background .15s, transform .1s;
+      z-index: 2;
+    }
+    .card-dismiss {
+      background: rgba(0,0,0,.45);
+      color: #fff;
+    }
+    .card-dismiss:hover { background: #e94560; transform: scale(1.1); }
+    .card-restore {
+      background: rgba(15,52,96,.7);
+      color: #fff;
+      font-size: 16px;
+    }
+    .card-restore:hover { background: #16a34a; transform: scale(1.1); }
+
     .card-body {
       padding: 14px 16px 16px;
       display: flex;
@@ -362,6 +362,14 @@
       white-space: nowrap;
     }
     .pill.metro { background: #e8f0fe; color: #1a73e8; }
+
+    .dist-line {
+      font-size: .76rem;
+      color: #6b7280;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
 
     .card-desc {
       font-size: .78rem;
@@ -415,11 +423,25 @@
     tbody tr { border-bottom: 1px solid #f0f2f5; transition: background .12s; }
     tbody tr:last-child { border-bottom: none; }
     tbody tr:hover { background: #f8faff; }
+    tbody tr.hidden-row { opacity: .65; background: #fff5f5; }
     td { padding: 10px 14px; font-size: .84rem; vertical-align: middle; }
     td img { width: 90px; height: 60px; object-fit: cover; border-radius: 6px; }
     td a { color: #0f3460; font-weight: 600; text-decoration: none; }
     td a:hover { color: #e94560; text-decoration: underline; }
     td .price-cell { font-weight: 700; white-space: nowrap; color: #0f3460; }
+    td .dist-cell { font-size: .78rem; color: #6b7280; white-space: nowrap; }
+    td .tbl-dismiss, td .tbl-restore {
+      border: none;
+      border-radius: 6px;
+      padding: 3px 8px;
+      font-size: .78rem;
+      cursor: pointer;
+      transition: background .15s;
+    }
+    td .tbl-dismiss { background: #fee2e2; color: #dc2626; }
+    td .tbl-dismiss:hover { background: #dc2626; color: #fff; }
+    td .tbl-restore { background: #dcfce7; color: #16a34a; }
+    td .tbl-restore:hover { background: #16a34a; color: #fff; }
 
     /* toggle */
     .view-toggle {
@@ -504,6 +526,8 @@
     <option value="area-asc">Площадь ↑</option>
   </select>
 
+  <button id="btn-show-hidden">Скрытые: <span id="hidden-count">0</span></button>
+
   <span class="count-badge"><span id="visible-count">0</span> объявлений</span>
 
   <div class="view-toggle">
@@ -523,7 +547,9 @@
           <th>Цена</th>
           <th>Площадь</th>
           <th>Этаж</th>
+          <th>до Кремля</th>
           <th>Ссылка</th>
+          <th></th>
         </tr>
       </thead>
       <tbody id="table-body"></tbody>
@@ -533,11 +559,56 @@
 </main>
 
 <script>
+// =====================================================================
+// State
+// =====================================================================
 let allOffers = [];
-let viewMode = 'cards'; // 'cards' | 'table'
+let viewMode  = 'cards'; // 'cards' | 'table'
+let showHidden = false;
 
-// ---- helpers ----
+const HIDDEN_KEY = 'flat_tracker_hidden';
+const KREMLIN    = { lat: 55.7520, lng: 37.6175 };
 
+// =====================================================================
+// localStorage helpers
+// =====================================================================
+function getHidden() {
+  try { return new Set(JSON.parse(localStorage.getItem(HIDDEN_KEY) || '[]')); }
+  catch { return new Set(); }
+}
+function saveHidden(set) {
+  localStorage.setItem(HIDDEN_KEY, JSON.stringify([...set]));
+}
+function hideOffer(id) {
+  const h = getHidden(); h.add(String(id)); saveHidden(h);
+  updateHiddenCount();
+  applyFilters();
+}
+function restoreOffer(id) {
+  const h = getHidden(); h.delete(String(id)); saveHidden(h);
+  updateHiddenCount();
+  applyFilters();
+}
+function updateHiddenCount() {
+  document.getElementById('hidden-count').textContent = getHidden().size;
+}
+
+// =====================================================================
+// Geo helpers
+// =====================================================================
+function distKm(lat, lng) {
+  const R = 6371;
+  const toRad = x => x * Math.PI / 180;
+  const dLat = toRad(lat - KREMLIN.lat);
+  const dLng = toRad(lng - KREMLIN.lng);
+  const a = Math.sin(dLat / 2) ** 2
+          + Math.cos(toRad(KREMLIN.lat)) * Math.cos(toRad(lat)) * Math.sin(dLng / 2) ** 2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+// =====================================================================
+// Format helpers
+// =====================================================================
 function fmt(price) {
   if (!price) return '—';
   return Number(price).toLocaleString('ru-RU') + ' ₽/мес';
@@ -553,64 +624,86 @@ function noPhotoSvg() {
   </div>`;
 }
 
-// ---- dual range price track fill ----
-
+// =====================================================================
+// Dual-range price track
+// =====================================================================
 function updatePriceTrack() {
   const minEl = document.getElementById('price-min');
   const maxEl = document.getElementById('price-max');
   const track = document.getElementById('price-active-track');
   const min = Number(minEl.min), max = Number(minEl.max);
-  const lo = Number(minEl.value), hi = Number(maxEl.value);
+  const lo  = Number(minEl.value), hi = Number(maxEl.value);
   const pctLo = (lo - min) / (max - min) * 100;
   const pctHi = (hi - min) / (max - min) * 100;
   track.style.left  = pctLo + '%';
   track.style.width = (pctHi - pctLo) + '%';
 }
 
-// ---- area slider fill ----
-
 function updateAreaTrack() {
-  const el = document.getElementById('area-min');
+  const el  = document.getElementById('area-min');
   const min = Number(el.min), max = Number(el.max), val = Number(el.value);
-  const pct = (val - min) / (max - min) * 100;
-  el.style.setProperty('--pct', pct + '%');
+  el.style.setProperty('--pct', ((val - min) / (max - min) * 100) + '%');
 }
 
-// ---- render ----
-
+// =====================================================================
+// Render — cards
+// =====================================================================
 function renderCards(offers) {
   const container = document.getElementById('cards');
   if (!offers.length) { container.innerHTML = ''; return; }
-  container.innerHTML = offers.map(o => `
-    <div class="card">
+  const hidden = getHidden();
+  container.innerHTML = offers.map(o => {
+    const isHidden = hidden.has(String(o.id));
+    const distStr  = (o.lat != null && o.lng != null)
+      ? `<div class="dist-line">📍 до Кремля: ${distKm(o.lat, o.lng).toFixed(1)} км</div>`
+      : '';
+    const actionBtn = isHidden
+      ? `<button class="card-restore" data-id="${o.id}" title="Восстановить">↩</button>`
+      : `<button class="card-dismiss" data-id="${o.id}" title="Скрыть">✕</button>`;
+    return `
+    <div class="card${isHidden ? ' hidden-offer' : ''}">
       <div class="card-img-wrap">
         ${o.photo
-          ? `<img src="${o.photo}" alt="фото" loading="lazy" onerror="this.parentNode.innerHTML='${noPhotoSvg().replace(/"/g, "'").replace(/\n/g, '')}'"/>`
+          ? `<img src="${o.photo}" alt="фото" loading="lazy" onerror="this.parentNode.innerHTML='${noPhotoSvg().replace(/"/g,"'").replace(/\n/g,'')}'">`
           : noPhotoSvg()}
         <span class="card-price-tag">${fmt(o.price)}</span>
+        ${actionBtn}
       </div>
       <div class="card-body">
         <div class="card-address">${o.address || '—'}</div>
         <div class="card-meta">
           ${o.metro ? `<span class="pill metro">м. ${o.metro}</span>` : ''}
-          ${o.area ? `<span class="pill">${o.area} м²</span>` : ''}
+          ${o.area  ? `<span class="pill">${o.area} м²</span>` : ''}
           ${o.floor && o.floors_total ? `<span class="pill">${o.floor}/${o.floors_total} эт.</span>` : ''}
           ${o.rooms ? `<span class="pill">${o.rooms}-комн.</span>` : ''}
         </div>
+        ${distStr}
         ${o.description ? `<p class="card-desc">${o.description}</p>` : ''}
       </div>
       <div class="card-footer">
         <a href="${o.url}" target="_blank" rel="noopener">Открыть объявление →</a>
       </div>
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
 }
 
+// =====================================================================
+// Render — table
+// =====================================================================
 function renderTable(offers) {
-  const tbody = document.getElementById('table-body');
+  const tbody  = document.getElementById('table-body');
   if (!offers.length) { tbody.innerHTML = ''; return; }
-  tbody.innerHTML = offers.map(o => `
-    <tr>
+  const hidden = getHidden();
+  tbody.innerHTML = offers.map(o => {
+    const isHidden = hidden.has(String(o.id));
+    const distCell = (o.lat != null && o.lng != null)
+      ? `<span class="dist-cell">📍 ${distKm(o.lat, o.lng).toFixed(1)} км</span>`
+      : '—';
+    const actionBtn = isHidden
+      ? `<button class="tbl-restore" data-id="${o.id}">↩ Восстановить</button>`
+      : `<button class="tbl-dismiss" data-id="${o.id}">✕ Скрыть</button>`;
+    return `
+    <tr${isHidden ? ' class="hidden-row"' : ''}>
       <td>${o.photo
         ? `<img src="${o.photo}" alt="фото" loading="lazy" onerror="this.style.display='none'">`
         : '—'}</td>
@@ -621,30 +714,42 @@ function renderTable(offers) {
       <td><span class="price-cell">${fmt(o.price)}</span></td>
       <td>${o.area ? o.area + ' м²' : '—'}</td>
       <td>${o.floor && o.floors_total ? `${o.floor}/${o.floors_total}` : o.floor || '—'}</td>
+      <td>${distCell}</td>
       <td><a href="${o.url}" target="_blank" rel="noopener">Открыть →</a></td>
-    </tr>
-  `).join('');
+      <td>${actionBtn}</td>
+    </tr>`;
+  }).join('');
 }
 
+// =====================================================================
+// Apply filters + sort
+// =====================================================================
 function applyFilters() {
   const priceMin   = Number(document.getElementById('price-min').value);
   const priceMax   = Number(document.getElementById('price-max').value);
   const areaMin    = Number(document.getElementById('area-min').value);
   const dishwasher = document.getElementById('dishwasher-filter').checked;
   const sortVal    = document.getElementById('sort-select').value;
+  const hidden     = getHidden();
+  const dishRe     = /посудомо[её]чн|посудомойк/i;
 
-  const dishRe = /посудомо(е|ё)чн|посудомойк/i;
-
-  let filtered = allOffers.filter(o => {
-    if (o.price && o.price < priceMin) return false;
-    if (o.price && o.price > priceMax) return false;
-    if (o.area  && o.area  < areaMin)  return false;
-    if (dishwasher) {
-      const desc = (o.description || '') + ' ' + (o.title || '');
-      if (!dishRe.test(desc)) return false;
-    }
-    return true;
-  });
+  let filtered;
+  if (showHidden) {
+    // показываем только скрытые
+    filtered = allOffers.filter(o => hidden.has(String(o.id)));
+  } else {
+    filtered = allOffers.filter(o => {
+      if (hidden.has(String(o.id)))         return false;
+      if (o.price && o.price < priceMin)    return false;
+      if (o.price && o.price > priceMax)    return false;
+      if (o.area  && o.area  < areaMin)     return false;
+      if (dishwasher) {
+        const text = (o.description || '') + ' ' + (o.title || '');
+        if (!dishRe.test(text)) return false;
+      }
+      return true;
+    });
+  }
 
   filtered.sort((a, b) => {
     if (sortVal === 'price-asc')  return (a.price || 0) - (b.price || 0);
@@ -657,9 +762,9 @@ function applyFilters() {
   document.getElementById('visible-count').textContent = filtered.length;
 
   const isEmpty = filtered.length === 0;
-  document.getElementById('empty-msg').style.display   = isEmpty ? 'block' : 'none';
-  document.getElementById('cards').style.display       = (!isEmpty && viewMode === 'cards') ? '' : 'none';
-  document.getElementById('table-wrap').style.display  = (!isEmpty && viewMode === 'table') ? '' : 'none';
+  document.getElementById('empty-msg').style.display  = isEmpty ? 'block' : 'none';
+  document.getElementById('cards').style.display      = (!isEmpty && viewMode === 'cards') ? '' : 'none';
+  document.getElementById('table-wrap').style.display = (!isEmpty && viewMode === 'table') ? '' : 'none';
 
   if (!isEmpty) {
     if (viewMode === 'cards') renderCards(filtered);
@@ -667,43 +772,72 @@ function applyFilters() {
   }
 }
 
-// ---- price dual-range logic ----
+// =====================================================================
+// Event delegation — dismiss / restore buttons in cards + table
+// =====================================================================
+document.getElementById('cards').addEventListener('click', e => {
+  const d = e.target.closest('.card-dismiss');
+  if (d) { hideOffer(d.dataset.id); return; }
+  const r = e.target.closest('.card-restore');
+  if (r) restoreOffer(r.dataset.id);
+});
 
+document.querySelector('tbody#table-body') || document.addEventListener('click', e => {
+  const d = e.target.closest('.tbl-dismiss');
+  if (d) { hideOffer(d.dataset.id); return; }
+  const r = e.target.closest('.tbl-restore');
+  if (r) restoreOffer(r.dataset.id);
+});
+
+// table body is re-rendered, so delegate from the static wrapper
+document.querySelector('main').addEventListener('click', e => {
+  const d = e.target.closest('.tbl-dismiss');
+  if (d) { hideOffer(d.dataset.id); return; }
+  const r = e.target.closest('.tbl-restore');
+  if (r) restoreOffer(r.dataset.id);
+});
+
+// =====================================================================
+// Show-hidden toggle
+// =====================================================================
+document.getElementById('btn-show-hidden').addEventListener('click', () => {
+  showHidden = !showHidden;
+  document.getElementById('btn-show-hidden').classList.toggle('active', showHidden);
+  applyFilters();
+});
+
+// =====================================================================
+// Price dual-range
+// =====================================================================
 const priceMinEl = document.getElementById('price-min');
 const priceMaxEl = document.getElementById('price-max');
 
 priceMinEl.addEventListener('input', function() {
-  const lo = Number(this.value), hi = Number(priceMaxEl.value);
-  if (lo > hi) { this.value = hi; }
-  document.getElementById('price-min-val').textContent =
-    Number(this.value).toLocaleString('ru-RU') + ' ₽';
+  if (Number(this.value) > Number(priceMaxEl.value)) this.value = priceMaxEl.value;
+  document.getElementById('price-min-val').textContent = Number(this.value).toLocaleString('ru-RU') + ' ₽';
   updatePriceTrack();
   applyFilters();
 });
-
 priceMaxEl.addEventListener('input', function() {
-  const hi = Number(this.value), lo = Number(priceMinEl.value);
-  if (hi < lo) { this.value = lo; }
-  document.getElementById('price-max-val').textContent =
-    Number(this.value).toLocaleString('ru-RU') + ' ₽';
+  if (Number(this.value) < Number(priceMinEl.value)) this.value = priceMinEl.value;
+  document.getElementById('price-max-val').textContent = Number(this.value).toLocaleString('ru-RU') + ' ₽';
   updatePriceTrack();
   applyFilters();
 });
 
-// ---- area slider ----
-
+// =====================================================================
+// Area slider
+// =====================================================================
 document.getElementById('area-min').addEventListener('input', function() {
   document.getElementById('area-min-val').textContent = this.value + ' м²';
   updateAreaTrack();
   applyFilters();
 });
 
-// ---- dishwasher checkbox ----
-
+// =====================================================================
+// Dishwasher / sort / view
+// =====================================================================
 document.getElementById('dishwasher-filter').addEventListener('change', applyFilters);
-
-// ---- sort & view ----
-
 document.getElementById('sort-select').addEventListener('change', applyFilters);
 
 document.getElementById('btn-cards').addEventListener('click', () => {
@@ -719,13 +853,11 @@ document.getElementById('btn-table').addEventListener('click', () => {
   applyFilters();
 });
 
-// ---- load data ----
-
+// =====================================================================
+// Load data
+// =====================================================================
 fetch('data.json')
-  .then(r => {
-    if (!r.ok) throw new Error('data.json not found');
-    return r.json();
-  })
+  .then(r => { if (!r.ok) throw new Error(); return r.json(); })
   .then(data => {
     allOffers = data.offers || [];
 
@@ -735,6 +867,7 @@ fetch('data.json')
         'Обновлено: ' + d.toLocaleString('ru-RU', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' });
     }
 
+    updateHiddenCount();
     updatePriceTrack();
     updateAreaTrack();
     applyFilters();
@@ -745,9 +878,10 @@ fetch('data.json')
       'Файл data.json не найден. Сначала запустите parser.py';
   });
 
-// Initial track state
+// Initial track state (before data loads)
 updatePriceTrack();
 updateAreaTrack();
+updateHiddenCount();
 </script>
 </body>
 </html>

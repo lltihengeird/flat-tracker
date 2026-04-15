@@ -17,27 +17,22 @@
     header {
       background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
       color: #fff;
-      padding: 28px 32px 24px;
+      padding: 24px 32px;
       display: flex;
+      justify-content: center;
       align-items: center;
-      gap: 16px;
+      position: relative;
       box-shadow: 0 2px 12px rgba(0,0,0,.35);
     }
-
-    header h1 { font-size: 1.6rem; font-weight: 700; letter-spacing: -0.5px; }
-    header .badge {
-      background: #e94560;
-      border-radius: 20px;
-      padding: 3px 12px;
-      font-size: 0.78rem;
-      font-weight: 600;
-      letter-spacing: .4px;
-      white-space: nowrap;
-    }
+    header h1 { font-size: 1.6rem; font-weight: 700; letter-spacing: -0.5px; text-align: center; }
     header .meta {
-      margin-left: auto;
-      font-size: 0.8rem;
-      opacity: .65;
+      position: absolute;
+      right: 32px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.78rem;
+      opacity: .55;
+      white-space: nowrap;
     }
 
     /* ---- FILTER BAR ---- */
@@ -50,21 +45,18 @@
       gap: 20px 32px;
       align-items: center;
     }
-
     .filter-group {
       display: flex;
       align-items: center;
       gap: 8px;
       flex-wrap: wrap;
     }
-
     .filter-group > .filter-title {
       font-size: .82rem;
       font-weight: 600;
       color: #555;
       white-space: nowrap;
     }
-
     .filter-val {
       font-weight: 700;
       color: #0f3460;
@@ -72,8 +64,6 @@
       white-space: nowrap;
       min-width: 74px;
     }
-
-    .filter-sep { color: #aaa; font-size: .85rem; }
 
     /* simple single range */
     input[type=range].simple-range {
@@ -89,8 +79,7 @@
     }
     input[type=range].simple-range::-webkit-slider-thumb {
       -webkit-appearance: none;
-      width: 16px;
-      height: 16px;
+      width: 16px; height: 16px;
       background: #0f3460;
       border: 2px solid #fff;
       border-radius: 50%;
@@ -98,8 +87,7 @@
       cursor: pointer;
     }
     input[type=range].simple-range::-moz-range-thumb {
-      width: 16px;
-      height: 16px;
+      width: 16px; height: 16px;
       background: #0f3460;
       border: 2px solid #fff;
       border-radius: 50%;
@@ -107,7 +95,7 @@
       cursor: pointer;
     }
 
-    /* dual range wrapper */
+    /* dual range */
     .dual-range {
       position: relative;
       width: 160px;
@@ -115,9 +103,7 @@
     }
     .dual-range .range-bg {
       position: absolute;
-      top: 6px;
-      left: 0;
-      right: 0;
+      top: 6px; left: 0; right: 0;
       height: 4px;
       background: #e5e7eb;
       border-radius: 4px;
@@ -142,14 +128,12 @@
       outline: none;
       border: none;
       pointer-events: none;
-      margin: 0;
-      padding: 0;
+      margin: 0; padding: 0;
     }
     .dual-range input[type=range]::-webkit-slider-thumb {
       -webkit-appearance: none;
       pointer-events: all;
-      width: 16px;
-      height: 16px;
+      width: 16px; height: 16px;
       background: #0f3460;
       border: 2px solid #fff;
       border-radius: 50%;
@@ -158,14 +142,12 @@
     }
     .dual-range input[type=range]::-moz-range-thumb {
       pointer-events: all;
-      width: 16px;
-      height: 16px;
+      width: 16px; height: 16px;
       background: #0f3460;
       border: 2px solid #fff;
       border-radius: 50%;
       box-shadow: 0 1px 4px rgba(0,0,0,.25);
       cursor: pointer;
-      border: 2px solid #fff;
     }
 
     /* checkbox */
@@ -179,8 +161,7 @@
       user-select: none;
     }
     .filter-checkbox input[type=checkbox] {
-      width: 16px;
-      height: 16px;
+      width: 16px; height: 16px;
       cursor: pointer;
       accent-color: #0f3460;
     }
@@ -195,9 +176,7 @@
       border-bottom: 1px solid #e5e7eb;
       flex-wrap: wrap;
     }
-
     .toolbar label { font-size: .85rem; color: #555; }
-
     .toolbar select {
       border: 1px solid #d1d5db;
       border-radius: 6px;
@@ -206,7 +185,6 @@
       outline: none;
       cursor: pointer;
     }
-
     #btn-show-hidden {
       border: 1px solid #d1d5db;
       border-radius: 6px;
@@ -220,7 +198,6 @@
     }
     #btn-show-hidden:hover { border-color: #0f3460; color: #0f3460; }
     #btn-show-hidden.active { background: #0f3460; color: #fff; border-color: #0f3460; }
-
     .count-badge {
       margin-left: auto;
       background: #f0f2f5;
@@ -238,7 +215,6 @@
       grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
       gap: 20px;
     }
-
     .card {
       background: #fff;
       border-radius: 14px;
@@ -248,28 +224,20 @@
       display: flex;
       flex-direction: column;
     }
-    .card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 24px rgba(0,0,0,.13);
-    }
-    .card.hidden-offer {
-      opacity: .75;
-      outline: 2px dashed #e94560;
-      outline-offset: -2px;
-    }
+    .card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,.13); }
+    .card.hidden-offer { opacity: .75; outline: 2px dashed #e94560; outline-offset: -2px; }
 
     .card-img-wrap {
       position: relative;
       width: 100%;
-      padding-top: 60%;
+      padding-top: 58%;
       background: #e5e7eb;
       overflow: hidden;
     }
     .card-img-wrap img {
       position: absolute;
       inset: 0;
-      width: 100%;
-      height: 100%;
+      width: 100%; height: 100%;
       object-fit: cover;
       transition: transform .4s;
     }
@@ -292,7 +260,7 @@
       position: absolute;
       bottom: 10px;
       left: 10px;
-      background: rgba(15, 52, 96, .88);
+      background: rgba(15,52,96,.88);
       color: #fff;
       border-radius: 8px;
       padding: 4px 10px;
@@ -301,13 +269,11 @@
       backdrop-filter: blur(4px);
     }
 
-    /* dismiss / restore buttons */
+    /* dismiss / restore */
     .card-dismiss, .card-restore {
       position: absolute;
-      top: 8px;
-      right: 8px;
-      width: 26px;
-      height: 26px;
+      top: 8px; right: 8px;
+      width: 26px; height: 26px;
       border: none;
       border-radius: 50%;
       cursor: pointer;
@@ -320,33 +286,56 @@
       transition: background .15s, transform .1s;
       z-index: 2;
     }
-    .card-dismiss {
-      background: rgba(0,0,0,.45);
-      color: #fff;
-    }
+    .card-dismiss { background: rgba(0,0,0,.45); color: #fff; }
     .card-dismiss:hover { background: #e94560; transform: scale(1.1); }
-    .card-restore {
-      background: rgba(15,52,96,.7);
-      color: #fff;
-      font-size: 16px;
-    }
+    .card-restore { background: rgba(15,52,96,.7); color: #fff; font-size: 16px; }
     .card-restore:hover { background: #16a34a; transform: scale(1.1); }
 
+    /* geo strip under photo */
+    .card-geo {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 12px;
+      background: #f8faff;
+      border-bottom: 1px solid #eef0f4;
+      gap: 8px;
+      flex-wrap: wrap;
+      min-height: 30px;
+    }
+    .card-geo .geo-metro {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: .75rem;
+      color: #374151;
+      white-space: nowrap;
+    }
+    .metro-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: inline-block;
+    }
+    .card-geo .geo-kremlin {
+      font-size: .74rem;
+      color: #6b7280;
+      white-space: nowrap;
+    }
+
     .card-body {
-      padding: 14px 16px 16px;
+      padding: 12px 16px 14px;
       display: flex;
       flex-direction: column;
       gap: 6px;
       flex: 1;
     }
-
     .card-address {
       font-size: .88rem;
       font-weight: 600;
       line-height: 1.35;
       color: #1a1a2e;
     }
-
     .card-meta {
       display: flex;
       flex-wrap: wrap;
@@ -361,16 +350,6 @@
       color: #555;
       white-space: nowrap;
     }
-    .pill.metro { background: #e8f0fe; color: #1a73e8; }
-
-    .dist-line {
-      font-size: .76rem;
-      color: #6b7280;
-      display: flex;
-      align-items: center;
-      gap: 3px;
-    }
-
     .card-desc {
       font-size: .78rem;
       color: #6b7280;
@@ -381,7 +360,6 @@
       -webkit-box-orient: vertical;
       overflow: hidden;
     }
-
     .card-footer {
       padding: 10px 16px 14px;
       border-top: 1px solid #f0f2f5;
@@ -401,7 +379,7 @@
     }
     .card-footer a:hover { background: #e94560; }
 
-    /* ---- TABLE VIEW ---- */
+    /* ---- TABLE ---- */
     #table-wrap { display: none; overflow-x: auto; }
     table {
       width: 100%;
@@ -412,12 +390,10 @@
       box-shadow: 0 1px 4px rgba(0,0,0,.08);
     }
     thead th {
-      background: #0f3460;
-      color: #fff;
+      background: #0f3460; color: #fff;
       padding: 12px 14px;
       text-align: left;
-      font-size: .82rem;
-      font-weight: 600;
+      font-size: .82rem; font-weight: 600;
       white-space: nowrap;
     }
     tbody tr { border-bottom: 1px solid #f0f2f5; transition: background .12s; }
@@ -429,47 +405,31 @@
     td a { color: #0f3460; font-weight: 600; text-decoration: none; }
     td a:hover { color: #e94560; text-decoration: underline; }
     td .price-cell { font-weight: 700; white-space: nowrap; color: #0f3460; }
-    td .dist-cell { font-size: .78rem; color: #6b7280; white-space: nowrap; }
+    td .geo-cell { font-size: .78rem; color: #6b7280; white-space: nowrap; line-height: 1.7; }
     td .tbl-dismiss, td .tbl-restore {
-      border: none;
-      border-radius: 6px;
-      padding: 3px 8px;
-      font-size: .78rem;
-      cursor: pointer;
-      transition: background .15s;
+      border: none; border-radius: 6px;
+      padding: 3px 8px; font-size: .78rem;
+      cursor: pointer; transition: background .15s;
     }
     td .tbl-dismiss { background: #fee2e2; color: #dc2626; }
     td .tbl-dismiss:hover { background: #dc2626; color: #fff; }
     td .tbl-restore { background: #dcfce7; color: #16a34a; }
     td .tbl-restore:hover { background: #16a34a; color: #fff; }
 
-    /* toggle */
-    .view-toggle {
-      display: flex;
-      gap: 4px;
-      background: #f0f2f5;
-      border-radius: 8px;
-      padding: 3px;
-    }
+    /* view toggle */
+    .view-toggle { display: flex; gap: 4px; background: #f0f2f5; border-radius: 8px; padding: 3px; }
     .view-btn {
-      border: none;
-      background: transparent;
-      border-radius: 6px;
-      padding: 5px 10px;
-      cursor: pointer;
-      color: #555;
+      border: none; background: transparent;
+      border-radius: 6px; padding: 5px 10px;
+      cursor: pointer; color: #555;
       transition: background .15s, color .15s;
     }
     .view-btn.active { background: #fff; color: #0f3460; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
 
-    .empty {
-      text-align: center;
-      padding: 60px 20px;
-      color: #9ca3af;
-      font-size: 1rem;
-    }
+    .empty { text-align: center; padding: 60px 20px; color: #9ca3af; font-size: 1rem; }
 
     @media (max-width: 600px) {
+      header .meta { display: none; }
       header, .filter-bar, .toolbar, main { padding-left: 16px; padding-right: 16px; }
       header h1 { font-size: 1.2rem; }
     }
@@ -479,14 +439,12 @@
 
 <header>
   <h1>гигамегасуперХАТАбот3000</h1>
-  <span class="badge">до 200 000 ₽</span>
   <span class="meta" id="fetched-at"></span>
 </header>
 
 <!-- ===== FILTER BAR ===== -->
 <div class="filter-bar">
 
-  <!-- Цена: двойной ползунок -->
   <div class="filter-group">
     <span class="filter-title">Цена:</span>
     <span class="filter-val" id="price-min-val">0 ₽</span>
@@ -499,14 +457,12 @@
     <span class="filter-val" id="price-max-val">200 000 ₽</span>
   </div>
 
-  <!-- Площадь: одиночный ползунок -->
   <div class="filter-group">
     <span class="filter-title">Площадь от:</span>
     <input type="range" class="simple-range" id="area-min" min="20" max="120" step="1" value="20" style="--pct:0%">
     <span class="filter-val" id="area-min-val">20 м²</span>
   </div>
 
-  <!-- Посудомоечная машина: чекбокс -->
   <div class="filter-group">
     <label class="filter-checkbox">
       <input type="checkbox" id="dishwasher-filter">
@@ -547,7 +503,7 @@
           <th>Цена</th>
           <th>Площадь</th>
           <th>Этаж</th>
-          <th>до Кремля</th>
+          <th>Гео</th>
           <th>Ссылка</th>
           <th></th>
         </tr>
@@ -562,12 +518,105 @@
 // =====================================================================
 // State
 // =====================================================================
-let allOffers = [];
-let viewMode  = 'cards'; // 'cards' | 'table'
+let allOffers  = [];
+let viewMode   = 'cards';
 let showHidden = false;
 
 const HIDDEN_KEY = 'flat_tracker_hidden';
 const KREMLIN    = { lat: 55.7520, lng: 37.6175 };
+
+// =====================================================================
+// Metro line → color lookup
+// =====================================================================
+const METRO_COLOR = (() => {
+  const lines = [
+    // [color, [...stations]]
+    ['#ef3124', [ // Сокольническая
+      'Бульвар Рокоссовского','Черкизовская','Преображенская площадь','Сокольники',
+      'Красносельская','Красные Ворота','Чистые Пруды','Лубянка',
+      'Охотный Ряд','Библиотека им. Ленина','Кропоткинская','Парк Культуры',
+      'Фрунзенская','Спортивная','Воробьёвы Горы','Университет',
+      'Проспект Вернадского','Юго-Западная','Тропарёво','Румянцево',
+      'Саларьево','Филатов Луг','Прокшино','Ольховая','Коммунарка',
+    ]],
+    ['#4baf4f', [ // Замоскворецкая
+      'Ховрино','Беломорская','Речной Вокзал','Водный Стадион','Войковская',
+      'Сокол','Аэропорт','Динамо','Белорусская','Маяковская','Тверская',
+      'Театральная','Новокузнецкая','Павелецкая','Автозаводская','Технопарк',
+      'Коломенская','Каширская','Кантемировская','Царицыно','Орехово',
+      'Домодедовская','Красногвардейская','Алма-Атинская','Зябликово',
+    ]],
+    ['#006fba', [ // Арбатско-Покровская
+      'Щёлковская','Первомайская','Измайловская','Партизанская','Семёновская',
+      'Электрозаводская','Бауманская','Курская','Площадь Революции','Арбатская',
+      'Смоленская','Киевская','Студенческая','Кутузовская','Фили',
+      'Багратионовская','Филёвский парк','Пионерская','Кунцевская','Молодёжная',
+      'Крылатское','Строгино','Щукинская','Октябрьское Поле','Полежаевская',
+      'Беговая','Улица 1905 года','Баррикадная','Пушкинская','Чеховская',
+      'Боровицкая','Александровский сад',
+    ]],
+    ['#00b9e8', [ // Филёвская (уникальные)
+      'Выставочная','Международная','Деловой центр',
+    ]],
+    ['#8d5d2c', [ // Кольцевая
+      'Комсомольская','Проспект Мира','Новослободская','Краснопресненская',
+      'Октябрьская','Добрынинская','Таганская',
+    ]],
+    ['#f08c00', [ // Калужско-Рижская
+      'Медведково','Бабушкинская','Свиблово','Ботанический сад','ВДНХ',
+      'Алексеевская','Рижская','Сухаревская','Тургеневская','Китай-город',
+      'Третьяковская','Ленинский проспект','Шаболовская','Академическая',
+      'Профсоюзная','Новые Черёмушки','Калужская','Беляево','Коньково',
+      'Тёплый Стан','Ясенево','Новоясеневская','Аннино',
+      'Улица Академика Янгеля','Пражская',
+    ]],
+    ['#8e479b', [ // Таганско-Краснопресненская
+      'Планерная','Сходненская','Тушинская','Спартак','Спартак (МЦД)',
+      'Кузнецкий мост','Пролетарская','Волгоградский проспект',
+      'Текстильщики','Кузьминки','Рязанский проспект','Выхино',
+      'Жулебино','Котельники',
+    ]],
+    ['#ffe000', [ // Калининско-Солнцевская (жёлтая)
+      'Новокосино','Новогиреево','Перово','Шоссе Энтузиастов','Авиамоторная',
+      'Площадь Ильича','Марксистская','Минская','Ломоносовский проспект',
+      'Раменки','Мичуринский проспект','Озёрная','Говорово','Солнцево',
+      'Боровское шоссе','Новопеределкино','Рассказовка',
+    ]],
+    ['#a2a5a3', [ // Серпуховско-Тимирязевская
+      'Алтуфьево','Бибирево','Отрадное','Владыкино','Петровско-Разумовская',
+      'Тимирязевская','Дмитровская','Савёловская','Менделеевская',
+      'Цветной бульвар','Серпуховская','Тульская','Нагатинская','Нагорная',
+      'Нахимовский проспект','Севастопольская','Чертановская','Южная',
+      'Бульвар Дмитрия Донского','Улица Скобелевская','Лесопарковая',
+    ]],
+    ['#b3d445', [ // Люблинско-Дмитровская
+      'Люблино','Братиславская','Марьино','Борисово','Шипиловская',
+      'Печатники','Волжская','Дубровка','Кожуховская','Крестьянская застава',
+      'Марьина Роща','Сретенский бульвар','Трубная','Чкаловская',
+      'Покровское-Стрешнево','Хлебниково','Физтех','Лианозово',
+      'Яхромская','Лётчик Бабушкин','Челобитьево',
+    ]],
+    ['#82c0e0', [ // БКЛ
+      'Шелепиха','Хорошёвская','ЦСКА','Петровский парк','Зорге',
+      'Хорошёво','Мнёвники','Терехово','Давыдково','Аминьевская',
+      'Новаторская','Воронцовская','Зюзино','Крымская','Каховская',
+      'Варшавская','ЗИЛ','Нижегородская','Лефортово','Авиамоторная (БКЛ)',
+      'Электрозаводская (БКЛ)','Рубнёво','Карамышевская','Народное Ополчение',
+      'Угрешская','Кленовый бульвар',
+    ]],
+  ];
+  const map = {};
+  for (const [color, stations] of lines) {
+    for (const s of stations) {
+      if (!(s in map)) map[s] = color; // first-write wins for conflicts
+    }
+  }
+  return map;
+})();
+
+function metroColor(name) {
+  return METRO_COLOR[name] || '#9ca3af';
+}
 
 // =====================================================================
 // localStorage helpers
@@ -581,29 +630,43 @@ function saveHidden(set) {
 }
 function hideOffer(id) {
   const h = getHidden(); h.add(String(id)); saveHidden(h);
-  updateHiddenCount();
-  applyFilters();
+  updateHiddenCount(); applyFilters();
 }
 function restoreOffer(id) {
   const h = getHidden(); h.delete(String(id)); saveHidden(h);
-  updateHiddenCount();
-  applyFilters();
+  updateHiddenCount(); applyFilters();
 }
 function updateHiddenCount() {
   document.getElementById('hidden-count').textContent = getHidden().size;
 }
 
 // =====================================================================
-// Geo helpers
+// Geo / distance helpers
 // =====================================================================
 function distKm(lat, lng) {
   const R = 6371;
   const toRad = x => x * Math.PI / 180;
   const dLat = toRad(lat - KREMLIN.lat);
-  const dLng = toRad(lng - KREMLIN.lng);
+  const dLng = toRad(lng  - KREMLIN.lng);
   const a = Math.sin(dLat / 2) ** 2
           + Math.cos(toRad(KREMLIN.lat)) * Math.cos(toRad(lat)) * Math.sin(dLng / 2) ** 2;
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+function fmtDist(lat, lng) {
+  if (lat == null || lng == null) return null;
+  const km = distKm(lat, lng);
+  return km < 1
+    ? `📍 ${Math.round(km * 1000)} м до Кремля`
+    : `📍 ${km.toFixed(1)} км до Кремля`;
+}
+
+function metroHtml(o) {
+  if (!o.metro) return '';
+  const color = metroColor(o.metro);
+  const dot   = `<span class="metro-dot" style="background:${color}"></span>`;
+  const time  = o.walk_time ? ` · ${o.walk_time} мин` : (o.metro_distance ? ` · ${o.metro_distance} м` : '');
+  return `<span class="geo-metro">${dot}${o.metro}${time}</span>`;
 }
 
 // =====================================================================
@@ -613,36 +676,26 @@ function fmt(price) {
   if (!price) return '—';
   return Number(price).toLocaleString('ru-RU') + ' ₽/мес';
 }
-
 function noPhotoSvg() {
-  return `<div class="no-photo">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
-      <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
-      <polyline points="21 15 16 10 5 21"/>
-    </svg>
-    Нет фото
-  </div>`;
+  return `<div class="no-photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>Нет фото</div>`;
 }
 
 // =====================================================================
-// Dual-range price track
+// Slider track updates
 // =====================================================================
 function updatePriceTrack() {
   const minEl = document.getElementById('price-min');
   const maxEl = document.getElementById('price-max');
   const track = document.getElementById('price-active-track');
-  const min = Number(minEl.min), max = Number(minEl.max);
-  const lo  = Number(minEl.value), hi = Number(maxEl.value);
-  const pctLo = (lo - min) / (max - min) * 100;
-  const pctHi = (hi - min) / (max - min) * 100;
-  track.style.left  = pctLo + '%';
-  track.style.width = (pctHi - pctLo) + '%';
+  const mn = Number(minEl.min), mx = Number(minEl.max);
+  const lo = Number(minEl.value), hi = Number(maxEl.value);
+  track.style.left  = ((lo - mn) / (mx - mn) * 100) + '%';
+  track.style.width = ((hi - lo) / (mx - mn) * 100) + '%';
 }
-
 function updateAreaTrack() {
-  const el  = document.getElementById('area-min');
-  const min = Number(el.min), max = Number(el.max), val = Number(el.value);
-  el.style.setProperty('--pct', ((val - min) / (max - min) * 100) + '%');
+  const el = document.getElementById('area-min');
+  const pct = (Number(el.value) - Number(el.min)) / (Number(el.max) - Number(el.min)) * 100;
+  el.style.setProperty('--pct', pct + '%');
 }
 
 // =====================================================================
@@ -652,32 +705,34 @@ function renderCards(offers) {
   const container = document.getElementById('cards');
   if (!offers.length) { container.innerHTML = ''; return; }
   const hidden = getHidden();
+
   container.innerHTML = offers.map(o => {
     const isHidden = hidden.has(String(o.id));
-    const distStr  = (o.lat != null && o.lng != null)
-      ? `<div class="dist-line">📍 до Кремля: ${distKm(o.lat, o.lng).toFixed(1)} км</div>`
-      : '';
-    const actionBtn = isHidden
+    const kremlinStr = fmtDist(o.lat, o.lng);
+    const actionBtn  = isHidden
       ? `<button class="card-restore" data-id="${o.id}" title="Восстановить">↩</button>`
       : `<button class="card-dismiss" data-id="${o.id}" title="Скрыть">✕</button>`;
+
+    const geoLeft  = metroHtml(o);
+    const geoRight = kremlinStr ? `<span class="geo-kremlin">${kremlinStr}</span>` : '';
+    const geoStrip = (geoLeft || geoRight)
+      ? `<div class="card-geo">${geoLeft}${geoRight}</div>` : '';
+
     return `
     <div class="card${isHidden ? ' hidden-offer' : ''}">
       <div class="card-img-wrap">
-        ${o.photo
-          ? `<img src="${o.photo}" alt="фото" loading="lazy" onerror="this.parentNode.innerHTML='${noPhotoSvg().replace(/"/g,"'").replace(/\n/g,'')}'">`
-          : noPhotoSvg()}
+        ${o.photo ? `<img src="${o.photo}" alt="фото" loading="lazy" onerror="this.parentNode.innerHTML='${noPhotoSvg().replace(/"/g,"'").replace(/\n/g,'')}'">` : noPhotoSvg()}
         <span class="card-price-tag">${fmt(o.price)}</span>
         ${actionBtn}
       </div>
+      ${geoStrip}
       <div class="card-body">
         <div class="card-address">${o.address || '—'}</div>
         <div class="card-meta">
-          ${o.metro ? `<span class="pill metro">м. ${o.metro}</span>` : ''}
           ${o.area  ? `<span class="pill">${o.area} м²</span>` : ''}
           ${o.floor && o.floors_total ? `<span class="pill">${o.floor}/${o.floors_total} эт.</span>` : ''}
           ${o.rooms ? `<span class="pill">${o.rooms}-комн.</span>` : ''}
         </div>
-        ${distStr}
         ${o.description ? `<p class="card-desc">${o.description}</p>` : ''}
       </div>
       <div class="card-footer">
@@ -691,30 +746,32 @@ function renderCards(offers) {
 // Render — table
 // =====================================================================
 function renderTable(offers) {
-  const tbody  = document.getElementById('table-body');
+  const tbody = document.getElementById('table-body');
   if (!offers.length) { tbody.innerHTML = ''; return; }
   const hidden = getHidden();
+
   tbody.innerHTML = offers.map(o => {
-    const isHidden = hidden.has(String(o.id));
-    const distCell = (o.lat != null && o.lng != null)
-      ? `<span class="dist-cell">📍 ${distKm(o.lat, o.lng).toFixed(1)} км</span>`
-      : '—';
+    const isHidden  = hidden.has(String(o.id));
+    const kremlinStr = fmtDist(o.lat, o.lng);
+    const color      = o.metro ? metroColor(o.metro) : '#9ca3af';
+    const metroCell  = o.metro
+      ? `<span style="display:inline-flex;align-items:center;gap:4px"><span class="metro-dot" style="background:${color}"></span>${o.metro}</span>`
+      : '';
     const actionBtn = isHidden
       ? `<button class="tbl-restore" data-id="${o.id}">↩ Восстановить</button>`
       : `<button class="tbl-dismiss" data-id="${o.id}">✕ Скрыть</button>`;
+
     return `
     <tr${isHidden ? ' class="hidden-row"' : ''}>
-      <td>${o.photo
-        ? `<img src="${o.photo}" alt="фото" loading="lazy" onerror="this.style.display='none'">`
-        : '—'}</td>
+      <td>${o.photo ? `<img src="${o.photo}" alt="фото" loading="lazy" onerror="this.style.display='none'">` : '—'}</td>
       <td>
         <div>${o.address || '—'}</div>
-        ${o.metro ? `<small style="color:#1a73e8">м. ${o.metro}</small>` : ''}
+        ${metroCell}
       </td>
       <td><span class="price-cell">${fmt(o.price)}</span></td>
       <td>${o.area ? o.area + ' м²' : '—'}</td>
       <td>${o.floor && o.floors_total ? `${o.floor}/${o.floors_total}` : o.floor || '—'}</td>
-      <td>${distCell}</td>
+      <td class="geo-cell">${kremlinStr || '—'}</td>
       <td><a href="${o.url}" target="_blank" rel="noopener">Открыть →</a></td>
       <td>${actionBtn}</td>
     </tr>`;
@@ -735,18 +792,14 @@ function applyFilters() {
 
   let filtered;
   if (showHidden) {
-    // показываем только скрытые
     filtered = allOffers.filter(o => hidden.has(String(o.id)));
   } else {
     filtered = allOffers.filter(o => {
-      if (hidden.has(String(o.id)))         return false;
-      if (o.price && o.price < priceMin)    return false;
-      if (o.price && o.price > priceMax)    return false;
-      if (o.area  && o.area  < areaMin)     return false;
-      if (dishwasher) {
-        const text = (o.description || '') + ' ' + (o.title || '');
-        if (!dishRe.test(text)) return false;
-      }
+      if (hidden.has(String(o.id)))      return false;
+      if (o.price && o.price < priceMin) return false;
+      if (o.price && o.price > priceMax) return false;
+      if (o.area  && o.area  < areaMin)  return false;
+      if (dishwasher && !dishRe.test((o.description || '') + ' ' + (o.title || ''))) return false;
       return true;
     });
   }
@@ -760,20 +813,15 @@ function applyFilters() {
   });
 
   document.getElementById('visible-count').textContent = filtered.length;
-
   const isEmpty = filtered.length === 0;
   document.getElementById('empty-msg').style.display  = isEmpty ? 'block' : 'none';
   document.getElementById('cards').style.display      = (!isEmpty && viewMode === 'cards') ? '' : 'none';
   document.getElementById('table-wrap').style.display = (!isEmpty && viewMode === 'table') ? '' : 'none';
-
-  if (!isEmpty) {
-    if (viewMode === 'cards') renderCards(filtered);
-    else renderTable(filtered);
-  }
+  if (!isEmpty) viewMode === 'cards' ? renderCards(filtered) : renderTable(filtered);
 }
 
 // =====================================================================
-// Event delegation — dismiss / restore buttons in cards + table
+// Event delegation — dismiss / restore
 // =====================================================================
 document.getElementById('cards').addEventListener('click', e => {
   const d = e.target.closest('.card-dismiss');
@@ -781,15 +829,6 @@ document.getElementById('cards').addEventListener('click', e => {
   const r = e.target.closest('.card-restore');
   if (r) restoreOffer(r.dataset.id);
 });
-
-document.querySelector('tbody#table-body') || document.addEventListener('click', e => {
-  const d = e.target.closest('.tbl-dismiss');
-  if (d) { hideOffer(d.dataset.id); return; }
-  const r = e.target.closest('.tbl-restore');
-  if (r) restoreOffer(r.dataset.id);
-});
-
-// table body is re-rendered, so delegate from the static wrapper
 document.querySelector('main').addEventListener('click', e => {
   const d = e.target.closest('.tbl-dismiss');
   if (d) { hideOffer(d.dataset.id); return; }
@@ -811,35 +850,26 @@ document.getElementById('btn-show-hidden').addEventListener('click', () => {
 // =====================================================================
 const priceMinEl = document.getElementById('price-min');
 const priceMaxEl = document.getElementById('price-max');
-
-priceMinEl.addEventListener('input', function() {
+priceMinEl.addEventListener('input', function () {
   if (Number(this.value) > Number(priceMaxEl.value)) this.value = priceMaxEl.value;
   document.getElementById('price-min-val').textContent = Number(this.value).toLocaleString('ru-RU') + ' ₽';
-  updatePriceTrack();
-  applyFilters();
+  updatePriceTrack(); applyFilters();
 });
-priceMaxEl.addEventListener('input', function() {
+priceMaxEl.addEventListener('input', function () {
   if (Number(this.value) < Number(priceMinEl.value)) this.value = priceMinEl.value;
   document.getElementById('price-max-val').textContent = Number(this.value).toLocaleString('ru-RU') + ' ₽';
-  updatePriceTrack();
-  applyFilters();
+  updatePriceTrack(); applyFilters();
 });
 
 // =====================================================================
-// Area slider
+// Area / dishwasher / sort / view
 // =====================================================================
-document.getElementById('area-min').addEventListener('input', function() {
+document.getElementById('area-min').addEventListener('input', function () {
   document.getElementById('area-min-val').textContent = this.value + ' м²';
-  updateAreaTrack();
-  applyFilters();
+  updateAreaTrack(); applyFilters();
 });
-
-// =====================================================================
-// Dishwasher / sort / view
-// =====================================================================
 document.getElementById('dishwasher-filter').addEventListener('change', applyFilters);
 document.getElementById('sort-select').addEventListener('change', applyFilters);
-
 document.getElementById('btn-cards').addEventListener('click', () => {
   viewMode = 'cards';
   document.getElementById('btn-cards').classList.add('active');
@@ -860,25 +890,18 @@ fetch('data.json')
   .then(r => { if (!r.ok) throw new Error(); return r.json(); })
   .then(data => {
     allOffers = data.offers || [];
-
     if (data.fetched_at) {
       const d = new Date(data.fetched_at);
       document.getElementById('fetched-at').textContent =
         'Обновлено: ' + d.toLocaleString('ru-RU', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' });
     }
-
-    updateHiddenCount();
-    updatePriceTrack();
-    updateAreaTrack();
-    applyFilters();
+    updateHiddenCount(); updatePriceTrack(); updateAreaTrack(); applyFilters();
   })
   .catch(() => {
     document.getElementById('empty-msg').style.display = 'block';
-    document.getElementById('empty-msg').textContent =
-      'Файл data.json не найден. Сначала запустите parser.py';
+    document.getElementById('empty-msg').textContent   = 'Файл data.json не найден. Сначала запустите parser.py';
   });
 
-// Initial track state (before data loads)
 updatePriceTrack();
 updateAreaTrack();
 updateHiddenCount();

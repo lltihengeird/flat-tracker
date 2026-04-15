@@ -457,7 +457,7 @@
 
 <header>
   <h1>Аренда 1-комнатных квартир · Москва</h1>
-  <span class="badge">до 60 000 ₽</span>
+  <span class="badge">до 200 000 ₽</span>
   <span class="meta" id="fetched-at"></span>
 </header>
 
@@ -467,21 +467,21 @@
   <!-- Цена: двойной ползунок -->
   <div class="filter-group">
     <span class="filter-title">Цена:</span>
-    <span class="filter-val" id="price-min-val">80 000 ₽</span>
+    <span class="filter-val" id="price-min-val">0 ₽</span>
     <div class="dual-range" id="dual-price">
       <div class="range-bg"></div>
       <div class="range-active" id="price-active-track"></div>
-      <input type="range" id="price-min" min="80000" max="140000" step="1000" value="80000">
-      <input type="range" id="price-max" min="80000" max="140000" step="1000" value="140000">
+      <input type="range" id="price-min" min="0" max="200000" step="1000" value="0">
+      <input type="range" id="price-max" min="0" max="200000" step="1000" value="200000">
     </div>
-    <span class="filter-val" id="price-max-val">140 000 ₽</span>
+    <span class="filter-val" id="price-max-val">200 000 ₽</span>
   </div>
 
   <!-- Площадь: одиночный ползунок -->
   <div class="filter-group">
     <span class="filter-title">Площадь от:</span>
-    <input type="range" class="simple-range" id="area-min" min="20" max="100" step="1" value="50" style="--pct:50%">
-    <span class="filter-val" id="area-min-val">50 м²</span>
+    <input type="range" class="simple-range" id="area-min" min="20" max="120" step="1" value="20" style="--pct:0%">
+    <span class="filter-val" id="area-min-val">20 м²</span>
   </div>
 
   <!-- Посудомоечная машина: чекбокс -->
@@ -733,34 +733,6 @@ fetch('data.json')
       const d = new Date(data.fetched_at);
       document.getElementById('fetched-at').textContent =
         'Обновлено: ' + d.toLocaleString('ru-RU', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' });
-    }
-
-    // Adjust price slider bounds to actual data range
-    const prices = allOffers.map(o => o.price).filter(Boolean);
-    if (prices.length) {
-      const dataMin = Math.min(...prices);
-      const dataMax = Math.max(...prices);
-      const lo = Math.floor(dataMin / 1000) * 1000;
-      const hi = Math.ceil(dataMax  / 1000) * 1000;
-      [priceMinEl, priceMaxEl].forEach(el => {
-        el.min = lo; el.max = hi; el.step = 1000;
-      });
-      priceMinEl.value = lo;
-      priceMaxEl.value = hi;
-      document.getElementById('price-min-val').textContent = lo.toLocaleString('ru-RU') + ' ₽';
-      document.getElementById('price-max-val').textContent = hi.toLocaleString('ru-RU') + ' ₽';
-    }
-
-    // Adjust area slider bounds
-    const areas = allOffers.map(o => o.area).filter(Boolean);
-    if (areas.length) {
-      const areaEl = document.getElementById('area-min');
-      const minArea = Math.floor(Math.min(...areas));
-      const maxArea = Math.ceil(Math.max(...areas));
-      areaEl.min = minArea;
-      areaEl.max = maxArea;
-      areaEl.value = minArea;
-      document.getElementById('area-min-val').textContent = minArea + ' м²';
     }
 
     updatePriceTrack();

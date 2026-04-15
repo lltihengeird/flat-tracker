@@ -31,7 +31,7 @@ HEADERS = {
     "Referer": "https://www.cian.ru/",
 }
 
-# Moscow region ID = 1, 1-room flat, rent, max 60 000 RUB
+# Moscow region ID = 1, 1-room flat, rent, max 200 000 RUB
 def build_query(page: int) -> dict:
     return {
         "jsonQuery": {
@@ -39,7 +39,7 @@ def build_query(page: int) -> dict:
             "engine_version": {"type": "term", "value": 2},
             "region": {"type": "terms", "value": [1]},
             "room": {"type": "terms", "value": [1]},
-            "price": {"type": "range", "value": {"lte": 60000}},
+            "price": {"type": "range", "value": {"lte": 200000}},
             "for_day": {"type": "term", "value": "!1"},  # long-term only
             "page": {"type": "term", "value": page},
         }
@@ -132,7 +132,7 @@ def scrape(max_pages: int = 5) -> list:
 
 
 def main():
-    log.info("Starting Cian parser — 1-room rentals in Moscow up to 60 000 RUB")
+    log.info("Starting Cian parser — 1-room rentals in Moscow up to 200 000 RUB")
     offers = scrape(max_pages=5)
 
     if not offers:

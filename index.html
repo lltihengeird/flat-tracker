@@ -293,6 +293,37 @@
     .card-restore:hover { background: #16a34a; transform: scale(1.1); }
 
     /* geo strip under photo */
+    /* boost badge on photo */
+    .boost-badge {
+      position: absolute;
+      bottom: 8px; right: 8px;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .7rem;
+      font-weight: 700;
+      color: #fff;
+      z-index: 2;
+      box-shadow: 0 1px 5px rgba(0,0,0,.4);
+      border: 2px solid rgba(255,255,255,.65);
+    }
+    .boost-badge.green  { background: #16a34a; }
+    .boost-badge.yellow { background: #ca8a04; }
+    .boost-badge.gray   { background: #6b7280; }
+
+    /* commission row under photo */
+    .card-commission {
+      padding: 4px 12px;
+      font-size: .76rem;
+      background: #fafafa;
+      border-bottom: 1px solid #eef0f4;
+      text-align: right;
+    }
+    .card-commission.free  { color: #16a34a; font-weight: 600; }
+    .card-commission.paid  { color: #dc2626; font-weight: 600; }
+
     .card-geo {
       display: flex;
       align-items: center;
@@ -718,12 +749,23 @@ function renderCards(offers) {
       ? `<img src="${o.photo}" alt="фото" loading="lazy" onerror="this.parentNode.innerHTML='${noPhotoSvg().replace(/"/g,"'").replace(/\n/g,'')}'">`
       : noPhotoSvg();
 
+    const score = calcBoostScore(o);
+    const badgeCls = score >= 80 ? 'green' : score >= 60 ? 'yellow' : 'gray';
+    const boostBadge = `<span class="boost-badge ${badgeCls}">${score}</span>`;
+
+    const comm = o.commission != null ? Number(o.commission) : null;
+    const commRow = comm != null
+      ? `<div class="card-commission ${comm === 0 ? 'free' : 'paid'}">Комиссия: ${comm}%</div>`
+      : '';
+
     return `
     <div class="card${isHidden ? ' hidden-offer' : ''}">
       <div class="card-img-wrap">
         <a class="card-img-link" href="${o.url}" target="_blank" rel="noopener">${imgContent}</a>
         ${actionBtn}
+        ${boostBadge}
       </div>
+      ${commRow}
       ${geoStrip}
       <div class="card-body">
         <div class="card-address">${o.address || '—'}</div>
@@ -806,9 +848,9 @@ function calcBoostScore(o) {
   else if (area >= 40) score += 10;
   else                 score += 5;
 
-  // Метро (пешком)
-  if (o.metro_transport === 'walk' && o.metro_time != null) {
-    const t = Number(o.metro_time);
+  // Метро (пешком) — реальные данные Циана
+  if (o.walk_time != null) {
+    const t = Number(o.walk_time);
     if      (t <= 5)  score += 15;
     else if (t <= 10) score += 10;
     else if (t <= 20) score += 5;
@@ -895,6 +937,8 @@ function applyFilters() {
   } else {
     filtered = allOffers.filter(o => {
       if (hidden.has(String(o.id)))      return false;
+      if (o.lat == null || o.lng == null) return false;
+      if (distKm(o.lat, o.lng) > 10)     return false;
       if (o.price && o.price < priceMin) return false;
       if (o.price && o.price > priceMax) return false;
       if (o.area  && o.area  < areaMin)  return false;

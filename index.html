@@ -40,11 +40,207 @@
       opacity: .65;
     }
 
+    /* ---- FILTER BAR ---- */
+    .filter-bar {
+      padding: 14px 32px;
+      background: #fff;
+      border-bottom: 1px solid #e5e7eb;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px 32px;
+      align-items: center;
+    }
+
+    .filter-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .filter-group > .filter-title {
+      font-size: .82rem;
+      font-weight: 600;
+      color: #555;
+      white-space: nowrap;
+    }
+
+    .filter-val {
+      font-weight: 700;
+      color: #0f3460;
+      font-size: .82rem;
+      white-space: nowrap;
+      min-width: 74px;
+    }
+
+    .filter-sep { color: #aaa; font-size: .85rem; }
+
+    /* dual range slider track fill */
+    .range-track {
+      position: relative;
+      height: 4px;
+      background: #e5e7eb;
+      border-radius: 4px;
+      width: 130px;
+      align-self: center;
+    }
+    .range-track .track-fill {
+      position: absolute;
+      height: 100%;
+      background: #0f3460;
+      border-radius: 4px;
+      pointer-events: none;
+    }
+    .range-track input[type=range] {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 50%;
+      transform: translateY(-50%);
+      opacity: 0;
+      cursor: pointer;
+      margin: 0;
+      padding: 0;
+    }
+    .range-track input[type=range]::-webkit-slider-thumb { width: 18px; height: 18px; }
+
+    /* visible thumb overlays */
+    .range-thumbs {
+      position: relative;
+      height: 16px;
+      width: 130px;
+      pointer-events: none;
+    }
+    .range-thumbs .thumb {
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      background: #0f3460;
+      border: 2px solid #fff;
+      border-radius: 50%;
+      top: 0;
+      transform: translateX(-50%);
+      box-shadow: 0 1px 4px rgba(0,0,0,.25);
+      pointer-events: none;
+    }
+
+    /* simple single range */
+    input[type=range].simple-range {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 130px;
+      height: 4px;
+      background: linear-gradient(to right, #0f3460 0%, #0f3460 var(--pct, 50%), #e5e7eb var(--pct, 50%), #e5e7eb 100%);
+      border-radius: 4px;
+      outline: none;
+      cursor: pointer;
+      border: none;
+    }
+    input[type=range].simple-range::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      background: #0f3460;
+      border: 2px solid #fff;
+      border-radius: 50%;
+      box-shadow: 0 1px 4px rgba(0,0,0,.25);
+      cursor: pointer;
+    }
+    input[type=range].simple-range::-moz-range-thumb {
+      width: 16px;
+      height: 16px;
+      background: #0f3460;
+      border: 2px solid #fff;
+      border-radius: 50%;
+      box-shadow: 0 1px 4px rgba(0,0,0,.25);
+      cursor: pointer;
+      border: none;
+    }
+
+    /* dual range wrapper */
+    .dual-range {
+      position: relative;
+      width: 160px;
+      height: 16px;
+    }
+    .dual-range .range-bg {
+      position: absolute;
+      top: 6px;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: #e5e7eb;
+      border-radius: 4px;
+      pointer-events: none;
+    }
+    .dual-range .range-active {
+      position: absolute;
+      top: 6px;
+      height: 4px;
+      background: #0f3460;
+      border-radius: 4px;
+      pointer-events: none;
+    }
+    .dual-range input[type=range] {
+      -webkit-appearance: none;
+      appearance: none;
+      position: absolute;
+      width: 100%;
+      height: 4px;
+      top: 6px;
+      background: transparent;
+      outline: none;
+      border: none;
+      pointer-events: none;
+      margin: 0;
+      padding: 0;
+    }
+    .dual-range input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      pointer-events: all;
+      width: 16px;
+      height: 16px;
+      background: #0f3460;
+      border: 2px solid #fff;
+      border-radius: 50%;
+      box-shadow: 0 1px 4px rgba(0,0,0,.25);
+      cursor: pointer;
+    }
+    .dual-range input[type=range]::-moz-range-thumb {
+      pointer-events: all;
+      width: 16px;
+      height: 16px;
+      background: #0f3460;
+      border: 2px solid #fff;
+      border-radius: 50%;
+      box-shadow: 0 1px 4px rgba(0,0,0,.25);
+      cursor: pointer;
+      border: 2px solid #fff;
+    }
+
+    /* checkbox */
+    .filter-checkbox {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      cursor: pointer;
+      font-size: .84rem;
+      color: #333;
+      user-select: none;
+    }
+    .filter-checkbox input[type=checkbox] {
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+      accent-color: #0f3460;
+    }
+
+    /* ---- TOOLBAR ---- */
     .toolbar {
       display: flex;
       align-items: center;
       gap: 12px;
-      padding: 16px 32px;
+      padding: 12px 32px;
       background: #fff;
       border-bottom: 1px solid #e5e7eb;
       flex-wrap: wrap;
@@ -52,7 +248,7 @@
 
     .toolbar label { font-size: .85rem; color: #555; }
 
-    .toolbar select, .toolbar input[type=range] {
+    .toolbar select {
       border: 1px solid #d1d5db;
       border-radius: 6px;
       padding: 4px 8px;
@@ -60,8 +256,6 @@
       outline: none;
       cursor: pointer;
     }
-
-    #price-label { font-weight: 600; color: #0f3460; min-width: 105px; }
 
     .count-badge {
       margin-left: auto;
@@ -98,7 +292,7 @@
     .card-img-wrap {
       position: relative;
       width: 100%;
-      padding-top: 60%;          /* 5:3 aspect ratio */
+      padding-top: 60%;
       background: #e5e7eb;
       overflow: hidden;
     }
@@ -254,7 +448,7 @@
     }
 
     @media (max-width: 600px) {
-      header, .toolbar, main { padding-left: 16px; padding-right: 16px; }
+      header, .filter-bar, .toolbar, main { padding-left: 16px; padding-right: 16px; }
       header h1 { font-size: 1.2rem; }
     }
   </style>
@@ -267,6 +461,40 @@
   <span class="meta" id="fetched-at"></span>
 </header>
 
+<!-- ===== FILTER BAR ===== -->
+<div class="filter-bar">
+
+  <!-- Цена: двойной ползунок -->
+  <div class="filter-group">
+    <span class="filter-title">Цена:</span>
+    <span class="filter-val" id="price-min-val">80 000 ₽</span>
+    <div class="dual-range" id="dual-price">
+      <div class="range-bg"></div>
+      <div class="range-active" id="price-active-track"></div>
+      <input type="range" id="price-min" min="80000" max="140000" step="1000" value="80000">
+      <input type="range" id="price-max" min="80000" max="140000" step="1000" value="140000">
+    </div>
+    <span class="filter-val" id="price-max-val">140 000 ₽</span>
+  </div>
+
+  <!-- Площадь: одиночный ползунок -->
+  <div class="filter-group">
+    <span class="filter-title">Площадь от:</span>
+    <input type="range" class="simple-range" id="area-min" min="20" max="100" step="1" value="50" style="--pct:50%">
+    <span class="filter-val" id="area-min-val">50 м²</span>
+  </div>
+
+  <!-- Посудомоечная машина: чекбокс -->
+  <div class="filter-group">
+    <label class="filter-checkbox">
+      <input type="checkbox" id="dishwasher-filter">
+      Посудомоечная машина
+    </label>
+  </div>
+
+</div>
+
+<!-- ===== TOOLBAR ===== -->
 <div class="toolbar">
   <label>Сортировка:</label>
   <select id="sort-select">
@@ -275,10 +503,6 @@
     <option value="area-desc">Площадь ↓</option>
     <option value="area-asc">Площадь ↑</option>
   </select>
-
-  <label>Макс. цена:</label>
-  <input type="range" id="price-range" min="0" max="60000" step="1000" value="60000" />
-  <span id="price-label">до 60 000 ₽</span>
 
   <span class="count-badge"><span id="visible-count">0</span> объявлений</span>
 
@@ -327,6 +551,29 @@ function noPhotoSvg() {
     </svg>
     Нет фото
   </div>`;
+}
+
+// ---- dual range price track fill ----
+
+function updatePriceTrack() {
+  const minEl = document.getElementById('price-min');
+  const maxEl = document.getElementById('price-max');
+  const track = document.getElementById('price-active-track');
+  const min = Number(minEl.min), max = Number(minEl.max);
+  const lo = Number(minEl.value), hi = Number(maxEl.value);
+  const pctLo = (lo - min) / (max - min) * 100;
+  const pctHi = (hi - min) / (max - min) * 100;
+  track.style.left  = pctLo + '%';
+  track.style.width = (pctHi - pctLo) + '%';
+}
+
+// ---- area slider fill ----
+
+function updateAreaTrack() {
+  const el = document.getElementById('area-min');
+  const min = Number(el.min), max = Number(el.max), val = Number(el.value);
+  const pct = (val - min) / (max - min) * 100;
+  el.style.setProperty('--pct', pct + '%');
 }
 
 // ---- render ----
@@ -380,10 +627,24 @@ function renderTable(offers) {
 }
 
 function applyFilters() {
-  const maxPrice = Number(document.getElementById('price-range').value);
-  const sortVal  = document.getElementById('sort-select').value;
+  const priceMin   = Number(document.getElementById('price-min').value);
+  const priceMax   = Number(document.getElementById('price-max').value);
+  const areaMin    = Number(document.getElementById('area-min').value);
+  const dishwasher = document.getElementById('dishwasher-filter').checked;
+  const sortVal    = document.getElementById('sort-select').value;
 
-  let filtered = allOffers.filter(o => !o.price || o.price <= maxPrice);
+  const dishRe = /посудомо(е|ё)чн|посудомойк/i;
+
+  let filtered = allOffers.filter(o => {
+    if (o.price && o.price < priceMin) return false;
+    if (o.price && o.price > priceMax) return false;
+    if (o.area  && o.area  < areaMin)  return false;
+    if (dishwasher) {
+      const desc = (o.description || '') + ' ' + (o.title || '');
+      if (!dishRe.test(desc)) return false;
+    }
+    return true;
+  });
 
   filtered.sort((a, b) => {
     if (sortVal === 'price-asc')  return (a.price || 0) - (b.price || 0);
@@ -396,9 +657,9 @@ function applyFilters() {
   document.getElementById('visible-count').textContent = filtered.length;
 
   const isEmpty = filtered.length === 0;
-  document.getElementById('empty-msg').style.display = isEmpty ? 'block' : 'none';
-  document.getElementById('cards').style.display      = (!isEmpty && viewMode === 'cards') ? '' : 'none';
-  document.getElementById('table-wrap').style.display = (!isEmpty && viewMode === 'table') ? '' : 'none';
+  document.getElementById('empty-msg').style.display   = isEmpty ? 'block' : 'none';
+  document.getElementById('cards').style.display       = (!isEmpty && viewMode === 'cards') ? '' : 'none';
+  document.getElementById('table-wrap').style.display  = (!isEmpty && viewMode === 'table') ? '' : 'none';
 
   if (!isEmpty) {
     if (viewMode === 'cards') renderCards(filtered);
@@ -406,14 +667,43 @@ function applyFilters() {
   }
 }
 
-// ---- controls ----
+// ---- price dual-range logic ----
 
-document.getElementById('price-range').addEventListener('input', function() {
-  const v = Number(this.value);
-  document.getElementById('price-label').textContent =
-    'до ' + v.toLocaleString('ru-RU') + ' ₽';
+const priceMinEl = document.getElementById('price-min');
+const priceMaxEl = document.getElementById('price-max');
+
+priceMinEl.addEventListener('input', function() {
+  const lo = Number(this.value), hi = Number(priceMaxEl.value);
+  if (lo > hi) { this.value = hi; }
+  document.getElementById('price-min-val').textContent =
+    Number(this.value).toLocaleString('ru-RU') + ' ₽';
+  updatePriceTrack();
   applyFilters();
 });
+
+priceMaxEl.addEventListener('input', function() {
+  const hi = Number(this.value), lo = Number(priceMinEl.value);
+  if (hi < lo) { this.value = lo; }
+  document.getElementById('price-max-val').textContent =
+    Number(this.value).toLocaleString('ru-RU') + ' ₽';
+  updatePriceTrack();
+  applyFilters();
+});
+
+// ---- area slider ----
+
+document.getElementById('area-min').addEventListener('input', function() {
+  document.getElementById('area-min-val').textContent = this.value + ' м²';
+  updateAreaTrack();
+  applyFilters();
+});
+
+// ---- dishwasher checkbox ----
+
+document.getElementById('dishwasher-filter').addEventListener('change', applyFilters);
+
+// ---- sort & view ----
+
 document.getElementById('sort-select').addEventListener('change', applyFilters);
 
 document.getElementById('btn-cards').addEventListener('click', () => {
@@ -445,14 +735,36 @@ fetch('data.json')
         'Обновлено: ' + d.toLocaleString('ru-RU', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' });
     }
 
-    // set slider max dynamically
-    const maxFound = Math.max(...allOffers.map(o => o.price || 0).filter(Boolean), 60000);
-    const slider = document.getElementById('price-range');
-    slider.max = maxFound;
-    slider.value = maxFound;
-    document.getElementById('price-label').textContent =
-      'до ' + Number(maxFound).toLocaleString('ru-RU') + ' ₽';
+    // Adjust price slider bounds to actual data range
+    const prices = allOffers.map(o => o.price).filter(Boolean);
+    if (prices.length) {
+      const dataMin = Math.min(...prices);
+      const dataMax = Math.max(...prices);
+      const lo = Math.floor(dataMin / 1000) * 1000;
+      const hi = Math.ceil(dataMax  / 1000) * 1000;
+      [priceMinEl, priceMaxEl].forEach(el => {
+        el.min = lo; el.max = hi; el.step = 1000;
+      });
+      priceMinEl.value = lo;
+      priceMaxEl.value = hi;
+      document.getElementById('price-min-val').textContent = lo.toLocaleString('ru-RU') + ' ₽';
+      document.getElementById('price-max-val').textContent = hi.toLocaleString('ru-RU') + ' ₽';
+    }
 
+    // Adjust area slider bounds
+    const areas = allOffers.map(o => o.area).filter(Boolean);
+    if (areas.length) {
+      const areaEl = document.getElementById('area-min');
+      const minArea = Math.floor(Math.min(...areas));
+      const maxArea = Math.ceil(Math.max(...areas));
+      areaEl.min = minArea;
+      areaEl.max = maxArea;
+      areaEl.value = minArea;
+      document.getElementById('area-min-val').textContent = minArea + ' м²';
+    }
+
+    updatePriceTrack();
+    updateAreaTrack();
     applyFilters();
   })
   .catch(() => {
@@ -460,6 +772,10 @@ fetch('data.json')
     document.getElementById('empty-msg').textContent =
       'Файл data.json не найден. Сначала запустите parser.py';
   });
+
+// Initial track state
+updatePriceTrack();
+updateAreaTrack();
 </script>
 </body>
 </html>

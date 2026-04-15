@@ -1,0 +1,17 @@
+# Данные парсера — не коммитим, генерируются локально
+data.json
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+
+# macOS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/

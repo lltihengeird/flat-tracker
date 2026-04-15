@@ -6,6 +6,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Optional
 
+import re
+
 import requests
 
 logging.basicConfig(
@@ -59,6 +61,13 @@ def fetch_page(session: requests.Session, page: int) -> Optional[dict]:
     return None
 
 
+# Amenity regexes (compiled once at module level)
+_re_dishwasher  = re.compile(r'посудомо[её]чн|посудомойк|пмм\b', re.I)
+_re_washer      = re.compile(r'стирал[ьъ]?н|смашин|смм\b|стиральн', re.I)
+_re_conditioner = re.compile(r'кондиционер|сплит.?систем', re.I)
+_re_fridge      = re.compile(r'холодильник', re.I)
+
+
 def parse_offer(offer: dict) -> dict:
     """Extract the fields we care about from a raw offer object."""
     full_url = offer.get("fullUrl") or f"https://www.cian.ru/rent/flat/{offer.get('id', '')}/"
@@ -100,6 +109,20 @@ def parse_offer(offer: dict) -> dict:
     lat = point.get("lat")
     lng = point.get("lng")
 
+    # Amenities
+    # Note: the search API does not expose individual appliance fields — only hasFurniture
+    # is a real boolean. Dishwasher / washing-machine / conditioner / fridge are detected
+    # by scanning the description + title text (same source the old frontend regex used).
+    description = offer.get("description") or ""
+    title       = offer.get("title") or ""
+    text        = (description + " " + title).lower()
+
+    has_furniture   = bool(offer.get("hasFurniture"))
+    has_dishwasher  = bool(_re_dishwasher.search(text))
+    has_washer      = bool(_re_washer.search(text))
+    has_conditioner = bool(_re_conditioner.search(text))
+    has_fridge      = bool(_re_fridge.search(text))
+
     return {
         "id": offer.get("id"),
         "url": full_url,
@@ -115,9 +138,14 @@ def parse_offer(offer: dict) -> dict:
         "floor": floor,
         "floors_total": floors_total,
         "rooms": offer.get("roomsCount"),
-        "description": (offer.get("description") or "")[:300],
+        "description": description[:300],
         "lat": lat,
         "lng": lng,
+        "has_furniture":   has_furniture,
+        "has_dishwasher":  has_dishwasher,
+        "has_washer":      has_washer,
+        "has_conditioner": has_conditioner,
+        "has_fridge":      has_fridge,
     }
 
 

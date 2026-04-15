@@ -1028,7 +1028,6 @@ function applyFilters() {
   const dishwasher = document.getElementById('dishwasher-filter').checked;
   const sortVal    = document.getElementById('sort-select').value;
   const hidden     = getHidden();
-  const dishRe     = /посудомо[её]чн|посудомойк/i;
 
   let filtered;
   if (activeTab === 'hidden') {
@@ -1036,14 +1035,19 @@ function applyFilters() {
   } else {
     filtered = allOffers.filter(o => {
       if (hidden.has(String(o.id)))      return false;
-      if (o.lat == null || o.lng == null) return false;
-      if (distKm(o.lat, o.lng) > 10)     return false;
+      if (o.lat != null && o.lng != null && distKm(o.lat, o.lng) > 10) return false;
       if (o.price && o.price < priceMin) return false;
       if (o.price && o.price > priceMax) return false;
       if (o.area  && o.area  < areaMin)  return false;
-      if (dishwasher && !dishRe.test((o.description || '') + ' ' + (o.title || ''))) return false;
+      if (dishwasher && !o.has_dishwasher) return false;
       return true;
     });
+    if (activeTab !== 'new') {
+      const filteredNewCount = filtered.filter(o => newIds.has(String(o.id))).length;
+      const badge = document.getElementById('new-badge');
+      badge.textContent = filteredNewCount;
+      badge.style.display = filteredNewCount > 0 ? 'flex' : 'none';
+    }
     if (activeTab === 'new') {
       filtered = filtered.filter(o => newIdsForFilter.has(String(o.id)));
     }

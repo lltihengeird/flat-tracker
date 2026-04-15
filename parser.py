@@ -38,7 +38,7 @@ def build_query(page: int) -> dict:
             "_type": "flatrent",
             "engine_version": {"type": "term", "value": 2},
             "region": {"type": "terms", "value": [1]},
-            "room": {"type": "terms", "value": [1]},
+            "room": {"type": "terms", "value": [1, 2, 3]},
             "price": {"type": "range", "value": {"lte": 200000}},
             "for_day": {"type": "term", "value": "!1"},  # long-term only
             "page": {"type": "term", "value": page},
@@ -139,7 +139,7 @@ def scrape(max_pages: int = 5) -> list:
 
 
 def main():
-    log.info("Starting Cian parser — 1-room rentals in Moscow up to 200 000 RUB")
+    log.info("Starting Cian parser — 1-2-3-room rentals in Moscow up to 200 000 RUB")
     offers = scrape(max_pages=5)
 
     if not offers:

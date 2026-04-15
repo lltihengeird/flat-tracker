@@ -43,6 +43,9 @@ def build_query(page: int) -> dict:
             "region": {"type": "terms", "value": [1]},
             "room": {"type": "terms", "value": [1, 2, 3]},
             "for_day": {"type": "term", "value": "!1"},  # long-term only
+            "price": {"type": "range", "value": {"gte": 90000, "lte": 140000}},
+            "total_area": {"type": "range", "value": {"gte": 50}},
+            "sort": {"type": "term", "value": "creation_date_desc"},
             "page": {"type": "term", "value": page},
         }
     }

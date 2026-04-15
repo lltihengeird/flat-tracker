@@ -4,6 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>гигамегасуперХАТАбот3000</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -15,24 +18,34 @@
     }
 
     header {
-      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
-      color: #fff;
-      padding: 24px 32px;
+      background: linear-gradient(135deg, #c9a96e, #e8d5b0, #c9a96e);
+      padding: 22px 32px;
       display: flex;
       justify-content: center;
       align-items: center;
       position: relative;
-      box-shadow: 0 2px 12px rgba(0,0,0,.35);
+      border-bottom: 2px solid #5c3d1e;
     }
-    header h1 { font-size: 1.6rem; font-weight: 700; letter-spacing: -0.5px; text-align: center; }
-    header .meta {
+    header::before,
+    header::after {
+      content: '';
       position: absolute;
-      right: 32px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 0.78rem;
-      opacity: .55;
-      white-space: nowrap;
+      top: 10px;
+      bottom: 10px;
+      width: 4px;
+      background: #5c3d1e;
+      border-radius: 2px;
+    }
+    header::before { left: 20px; }
+    header::after  { right: 20px; }
+    header h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #3d2008;
+      text-align: center;
     }
 
     /* ---- FILTER BAR ---- */
@@ -497,7 +510,6 @@
     .empty { text-align: center; padding: 60px 20px; color: #9ca3af; font-size: 1rem; }
 
     @media (max-width: 600px) {
-      header .meta { display: none; }
       header, .filter-bar, .toolbar, main { padding-left: 16px; padding-right: 16px; }
       header h1 { font-size: 1.2rem; }
     }
@@ -507,7 +519,6 @@
 
 <header>
   <h1>гигамегасуперХАТАбот3000</h1>
-  <span class="meta" id="fetched-at"></span>
 </header>
 
 <!-- ===== FILTER BAR ===== -->
@@ -1148,9 +1159,7 @@ fetch('data.json')
   .then(data => {
     allOffers = data.offers || [];
     if (data.fetched_at) {
-      const d = new Date(data.fetched_at);
-      document.getElementById('fetched-at').textContent =
-        'Обновлено: ' + d.toLocaleString('ru-RU', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' });
+      // date available but not displayed in header
     }
     computeNewIds(); updateHiddenCount(); updatePriceTrack(); updateAreaTrack(); loadFilters(); applyFilters();
   })

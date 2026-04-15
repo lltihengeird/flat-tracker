@@ -665,7 +665,8 @@ function metroHtml(o) {
   if (!o.metro) return '';
   const color = metroColor(o.metro);
   const dot   = `<span class="metro-dot" style="background:${color}"></span>`;
-  const time  = o.walk_time ? ` · ${o.walk_time} мин` : (o.metro_distance ? ` · ${o.metro_distance} м` : '');
+  const time  = (o.metro_transport === 'walk' && o.metro_time)
+    ? ` · ${o.metro_time} мин пешком` : '';
   return `<span class="geo-metro">${dot}${o.metro}${time}</span>`;
 }
 

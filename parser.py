@@ -72,9 +72,15 @@ def parse_offer(offer: dict) -> dict:
     address_parts = [item.get("name", "") for item in geo.get("address", [])]
     address = ", ".join(p for p in address_parts if p)
 
-    # Underground
+    # Underground — берём первую станцию из списка
     undergrounds = geo.get("undergrounds", [])
-    metro = undergrounds[0].get("name") if undergrounds else None
+    if undergrounds:
+        ug = undergrounds[0]
+        metro           = ug.get("name")
+        metro_time      = ug.get("travelTime")       # минуты
+        metro_transport = ug.get("transportType")    # "walk" | "transport"
+    else:
+        metro = metro_time = metro_transport = None
 
     # Photo
     photos = offer.get("photos", [])
@@ -85,10 +91,10 @@ def parse_offer(offer: dict) -> dict:
     floor = offer.get("floorNumber")
     floors_total = offer.get("building", {}).get("floorsCount")
 
-    # Coordinates
-    coordinates = geo.get("coordinates") or {}
-    lat = coordinates.get("lat")
-    lng = coordinates.get("lng")
+    # Coordinates — Cian может класть в "point" или "coordinates"
+    point = geo.get("point") or geo.get("coordinates") or {}
+    lat = point.get("lat")
+    lng = point.get("lng")
 
     return {
         "id": offer.get("id"),
@@ -96,6 +102,8 @@ def parse_offer(offer: dict) -> dict:
         "price": price,
         "address": address,
         "metro": metro,
+        "metro_time": metro_time,
+        "metro_transport": metro_transport,
         "photo": photo_url,
         "area": total_area,
         "floor": floor,

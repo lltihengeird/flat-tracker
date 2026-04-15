@@ -825,42 +825,44 @@ function renderTable(offers) {
 function calcBoostScore(o) {
   let score = 0;
 
-  // Цена
-  const price = o.price || 0;
-  if      (price <= 50000)  score += 30;
-  else if (price <= 80000)  score += 25;
-  else if (price <= 120000) score += 18;
-  else if (price <= 200000) score += 10;
-
-  // Расстояние до Кремля
+  // Расстояние до Кремля (макс 45)
   if (o.lat != null && o.lng != null) {
     const km = distKm(o.lat, o.lng);
-    if      (km <= 3)  score += 25;
-    else if (km <= 7)  score += 18;
-    else if (km <= 12) score += 10;
-    else               score += 5;
+    if      (km <= 2)  score += 45;
+    else if (km <= 4)  score += 38;
+    else if (km <= 6)  score += 30;
+    else if (km <= 8)  score += 20;
+    else if (km <= 10) score += 10;
   }
 
-  // Метраж
+  // Метраж (макс 30)
   const area = o.area || 0;
-  if      (area >= 80) score += 20;
-  else if (area >= 60) score += 15;
-  else if (area >= 40) score += 10;
+  if      (area >= 80) score += 30;
+  else if (area >= 60) score += 25;
+  else if (area >= 50) score += 20;
+  else if (area >= 40) score += 13;
   else                 score += 5;
 
-  // Метро (пешком) — реальные данные Циана
+  // Метро пешком (макс 15)
   if (o.walk_time != null) {
     const t = Number(o.walk_time);
-    if      (t <= 5)  score += 15;
-    else if (t <= 10) score += 10;
-    else if (t <= 20) score += 5;
+    if      (t <= 3)  score += 15;
+    else if (t <= 7)  score += 12;
+    else if (t <= 12) score += 8;
+    else if (t <= 20) score += 4;
+  } else {
+    score += 15; // нет данных о времени — нейтральный балл
   }
 
-  // Ремонт
-  const desc = (o.description || '').toLowerCase();
-  if      (desc.includes('дизайнерский'))                       score += 10;
-  else if (desc.includes('евроремонт') || desc.includes('евро')) score += 7;
-  else if (desc.includes('косметический'))                       score += 3;
+  // Комиссия (макс 10)
+  if (o.commission != null) {
+    const c = Number(o.commission);
+    if      (c === 0)  score += 10;
+    else if (c <= 50)  score += 6;
+    else               score += 2;
+  } else {
+    score += 5; // нет данных
+  }
 
   return score;
 }
